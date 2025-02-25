@@ -6,7 +6,7 @@ st.set_page_config(page_title="Clustering App",
                    layout="wide")
 
 ### LAYOUT ###
-st.header("Clustering App", divider="blue", anchor=False)
+st.header("Clustering Apps", divider="blue", anchor=False)
 
 # df = load_data("./data/titanic.csv")
 # st.session_state.df = df

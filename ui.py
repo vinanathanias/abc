@@ -1,3 +1,12 @@
 import streamlit as st
 
-st.header("hello")
+###### Streamlit page setup #####
+st.set_page_config(page_title="Clustering App", 
+                   page_icon=":material/scatter_plot:", 
+                   layout="wide")
+
+### LAYOUT ###
+st.header("Clustering App", divider="blue", anchor=False)
+
+# df = load_data("./data/titanic.csv")
+# st.session_state.df = df

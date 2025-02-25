@@ -13,7 +13,7 @@ import zipfile
 import pandas as pd
 
 # Path ke file ZIP
-zip_path = 'filtered_data.zip'
+zip_path = 'data/filtered_data.zip'
 
 # Membuka ZIP dan membaca daftar file di dalamnya
 with zipfile.ZipFile(zip_path, 'r') as zfile:

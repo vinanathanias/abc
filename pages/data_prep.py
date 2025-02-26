@@ -1,4 +1,10 @@
 import streamlit as st
+
+###### Streamlit page setup #####
+st.set_page_config(page_title="Clustering Apps", 
+                   page_icon=":material/scatter_plot:", 
+                   initial_sidebar_state="collapsed"
+                   layout="wide")
 import zipfile
 import pandas as pd
 import numpy as np
@@ -19,6 +25,10 @@ from pages.chart import (revenue_by_purchase_type,
                    repeat_purchase_rate,
                    top_products_by_sales1
                    )
+if st.button("icon=":material/arrow_back:"):
+    st.switch_page("ui.py")
+    
+st.markdown("<br>", unsafe_allow_html=True)
 
 st.markdown("""
 ### Ready to Get Started?  

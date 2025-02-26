@@ -6,6 +6,7 @@ st.set_page_config(page_title="Clustering Apps",
                    initial_sidebar_state="collapsed",
                    layout="wide")
 
+###### Hide sidebar ######
 st.markdown("""
             <style>
             [data-testid="stSidebar"] {

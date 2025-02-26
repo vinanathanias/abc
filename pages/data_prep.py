@@ -98,12 +98,12 @@ else:
 def preprocess_data():
     # Set a flag in session state to indicate preprocessing is done
     st.session_state['preprocessed'] = True
-
-    # Create segmented control
-    selected_section = st.selectbox(
+    
+    # Display the segmented control only after preprocessing
+    selected_section = st.segmented_control(
         "Select Section",
         ["About Dataset", "Silhouette Score & Elbow Method", "K-Means Clustering"],
-        index=0, key="select_section"
+        default="About Dataset"
     )
 
     if selected_section == "About Dataset":

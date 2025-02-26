@@ -36,15 +36,7 @@ with st.container(border=True):
     **Key Features:**  
     - **Flexible Clustering:** Adjust the number of clusters to suit your needs, or leverage the recommended optimum clusters using Silhouette Score and Elbow Score for the best segmentation results.  
     - **Data Visualization:** Easily identify customer patterns and behaviors through intuitive visualizations, empowering you to make informed business decisions.  
-    - **Simple Data Upload:** Our tool accepts datasets with the following columns:  
-      - InvoiceNo  
-      - StockCode  
-      - Description  
-      - Quantity  
-      - InvoiceDate  
-      - UnitPrice  
-      - CustomerID  
-      - Country  
+    - **Simple Data Upload:** Our tool accepts datasets with the following columns: *InvoiceNo, StockCode, Description, Quantity, InvoiceDate, UnitPrice, CustomerID, and Country* 
     
     Start exploring your customer data today and uncover meaningful insights to grow your business!
     """)

@@ -21,5 +21,5 @@ with st.container():
     Start exploring your customer data today and uncover meaningful insights to grow your business!
     """)
 
-with st.button("Let's get started", type="primary"):
+if st.button("Let's get started", type="primary"):
     st.switch_page("pages/data_prep.py")

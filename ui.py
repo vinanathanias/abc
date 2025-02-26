@@ -1,38 +1,57 @@
 import streamlit as st
-
-###### Streamlit page setup #####
-# st.set_page_config(page_title="Clustering App", 
-#                    page_icon=":material/scatter_plot:", 
-#                    layout="wide")
-
-### LAYOUT ###
-# st.header("Clustering Apps", divider="blue", anchor=False)
-
-
 import zipfile
 import pandas as pd
 
-# Path ke file ZIP
-zip_path = 'data/filtered_data.zip'
+###### Streamlit page setup #####
+st.set_page_config(page_title="Clustering Apps", 
+                   page_icon=":material/scatter_plot:", 
+                   layout="wide")
 
-# Membuka ZIP dan membaca daftar file di dalamnya
-with zipfile.ZipFile(zip_path, 'r') as zfile:
-    # Menampilkan daftar file di dalam ZIP
-    file_list = zfile.namelist()
-    csv_files = [f for f in file_list if f.endswith('.csv')]
-    
-    # Jika tidak ada file CSV
-    if not csv_files:
-        st.error("Tidak ada file CSV di dalam ZIP.")
-    else:
-        # Pilih file CSV yang ingin dibaca
-        selected_file = st.selectbox("Pilih CSV file:", csv_files)
-        
-        # Membaca CSV ke dalam DataFrame
-        with zfile.open(selected_file) as csvfile:
-            df = pd.read_csv(csvfile)
-            st.dataframe(df)
+### LAYOUT ###
+st.header("Welcome to Clustering Apps", anchor=False)
+with st.container(border=True):
+    st.write("This is inside the container")
 
+# Path to the ZIP file containing the existing data
+existing_data_zip_path = "data/filtered_data.zip"
 
-# df = load_data("./data/titanic.csv")
-# st.session_state.df = df
+# Expected columns for the dataset
+EXPECTED_COLUMNS = [
+    "InvoiceNo", "StockCode", "Description", "Quantity", 
+    "InvoiceDate", "UnitPrice", "CustomerID", "Country"
+]
+
+data_option = st.selectbox("Choose Dataset", ["Select", "Use existing data", "Upload new data"])
+df = None
+
+if data_option == "Use existing data":
+    with zipfile.ZipFile(existing_data_zip_path, 'r') as zfile:
+        # Display list of files in the ZIP
+        file_list = zfile.namelist()
+        csv_files = [f for f in file_list if f.endswith('.csv')]
+
+        if not csv_files:
+            st.error("No CSV file found in the ZIP.")
+        else:
+            # Select the CSV file to read
+            selected_file = st.selectbox("Existing data:", csv_files)
+
+            # Read the selected CSV file into a DataFrame
+            with zfile.open(selected_file) as csvfile:
+                df = pd.read_csv(csvfile)
+elif data_option == "Upload new data":
+    uploaded_file = st.file_uploader("Upload Dataset", type="csv")
+    if uploaded_file:
+        df = pd.read_csv(uploaded_file)
+
+        # Validation
+        missing_columns = [col for col in EXPECTED_COLUMNS if col not in df.columns]
+        if missing_columns:
+            st.error(f"Dataset does not match the required format. Missing columns: {missing_columns or 'None'}")
+            df = None
+else:
+    df = None
+
+# Display the DataFrame if it exists
+if df is not None:
+    st.dataframe(df)

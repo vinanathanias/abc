@@ -92,8 +92,6 @@ elif data_option == "Upload new data":
 else:
     df = None
 
-
-### DATA PREP ###
 # Example function for preprocessing (replace with your actual logic)
 def preprocess_data():
     # Set a flag in session state to indicate preprocessing is done
@@ -196,6 +194,7 @@ def preprocess_data():
 
             st.altair_chart(bar_chart, use_container_width=True)
 
+### DATA PREP ###
 # Check if dataframe is available
 if df is not None:
     # Display the dataframe

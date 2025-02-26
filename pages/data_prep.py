@@ -61,7 +61,7 @@ EXPECTED_COLUMNS = [
     "InvoiceDate", "UnitPrice", "CustomerID", "Country"
 ]
 
-data_option = st.selectbox("Choose Dataset", ["Select", "Use existing data", "Upload new data"])
+data_option = st.selectbox("Choose Dataset", ["Select", "Use existing data", "Upload new data"], key="choose_dataset")
 df = None
 
 if data_option == "Use existing data":
@@ -103,7 +103,7 @@ def preprocess_data():
     selected_section = st.selectbox(
         "Select Section",
         ["About Dataset", "Silhouette Score & Elbow Method", "K-Means Clustering"],
-        index=0
+        index=0, key="select_section"
     )
 
     if selected_section == "About Dataset":

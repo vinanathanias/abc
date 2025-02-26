@@ -3,6 +3,7 @@ import streamlit as st
 ###### Streamlit page setup #####
 st.set_page_config(page_title="Clustering Apps", 
                    page_icon=":material/scatter_plot:", 
+                   initial_sidebar_state="collapsed"
                    layout="wide")
 
 ### LAYOUT ###

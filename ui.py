@@ -6,6 +6,18 @@ st.set_page_config(page_title="Clustering Apps",
                    initial_sidebar_state="collapsed",
                    layout="wide")
 
+st.markdown("""
+            <style>
+            [data-testid="stSidebar"] {
+                display: none
+            }
+
+            [data-testid="collapsedControl"] {
+                display: none
+            }
+            </style>
+            """, unsafe_allow_html=True)
+
 ### LAYOUT ###
 st.header("Welcome to Clustering Apps", anchor=False, divider="grey")
 

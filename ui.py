@@ -28,7 +28,7 @@ st.set_page_config(page_title="Clustering Apps",
 ### LAYOUT ###
 st.header("Welcome to Clustering Apps", anchor=False, divider="grey")
 
-with st.container(border=True):
+with st.container():
     st.write("""  
     Harness the power of **K-Means clustering** to gain valuable insights into your online retail dataset. 
     Our platform allows you to effortlessly segment customers, helping you understand their behavior and tailor your marketing strategies.  
@@ -41,6 +41,7 @@ with st.container(border=True):
     Start exploring your customer data today and uncover meaningful insights to grow your business!
     """)
 
+# st.page_link("page2.py", label="Let's get started", icon="✅", disabled=True)
 
 # Path to the ZIP file containing the existing data
 existing_data_zip_path = "data/filtered_data.zip"

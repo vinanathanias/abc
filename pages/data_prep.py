@@ -25,6 +25,19 @@ from pages.chart import (revenue_by_purchase_type,
                    repeat_purchase_rate,
                    top_products_by_sales1
                    )
+###### Hide sidebar ######
+st.markdown("""
+            <style>
+            [data-testid="stSidebar"] {
+                display: none
+            }
+
+            [data-testid="collapsedControl"] {
+                display: none
+            }
+            </style>
+            """, unsafe_allow_html=True)
+
 if st.button(label=":material/arrow_back: Back", key="back_btn", type="tertiary"):
     st.switch_page("ui.py")
     

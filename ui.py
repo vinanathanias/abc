@@ -33,8 +33,8 @@ if data_option == "Use existing data":
         if not csv_files:
             st.error("No CSV file found in the ZIP.")
         else:
-            # Select the CSV file to read
-            selected_file = st.selectbox("Existing data:", csv_files)
+            # Assuming there's only one CSV file in the ZIP
+            selected_file = csv_files[0]
 
             # Read the selected CSV file into a DataFrame
             with zfile.open(selected_file) as csvfile:

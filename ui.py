@@ -2,6 +2,16 @@ import streamlit as st
 import zipfile
 import pandas as pd
 
+from chart import (revenue_by_purchase_type, 
+                   purchase_type_proportion, 
+                   sales_over_time, 
+                   top_products_by_sales, 
+                   average_order_value,
+                   monthly_active_customers,
+                   repeat_purchase_rate,
+                   top_products_by_sales1
+                   )
+
 ###### Streamlit page setup #####
 st.set_page_config(page_title="Clustering Apps", 
                    page_icon=":material/scatter_plot:", 

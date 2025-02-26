@@ -21,4 +21,4 @@ with st.container():
     Start exploring your customer data today and uncover meaningful insights to grow your business!
     """)
 
-st.page_link("data_prep.py", label="Let's get started", icon="✅", disabled=True)
+st.page_link("pages/data_prep.py", label="Let's get started", icon="✅", disabled=True)

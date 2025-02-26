@@ -27,7 +27,6 @@ st.markdown("""
 1. **Use Existing Dataset:** Start exploring insights right away with our preloaded dataset, specially curated for quick analysis and demonstration.  
 2. **Upload Your Own Dataset:** Bring your own data to the platform! Just make sure it follows the required format with the following columns: *InvoiceNo, StockCode, Description, Quantity, InvoiceDate, UnitPrice, CustomerID, and Country*  
 
-Choose the option that suits you best and start uncovering valuable customer insights!
 """)
 
 # Path to the ZIP file containing the existing data

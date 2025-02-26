@@ -1,7 +1,15 @@
 import streamlit as st
 import zipfile
 import pandas as pd
-
+import numpy as np
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import silhouette_score
+from sklearn.cluster import KMeans
+import altair as alt
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.express as px
+from datetime import timedelta
 from chart import (revenue_by_purchase_type, 
                    purchase_type_proportion, 
                    sales_over_time, 
@@ -61,10 +69,6 @@ elif data_option == "Upload new data":
             df = None
 else:
     df = None
-
-# Display the DataFrame if it exists
-if df is not None:
-    st.dataframe(df)
 
 
 ### DATA PREP ###

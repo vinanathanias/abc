@@ -26,12 +26,10 @@ st.set_page_config(page_title="Clustering Apps",
                    layout="wide")
 
 ### LAYOUT ###
-st.header("Welcome to Clustering Apps", anchor=False)
+st.header("Welcome to Clustering Apps", anchor=False, divider="grey")
 
 with st.container(border=True):
-    st.write("""
-    ### Welcome to our Customer Segmentation Tool!  
-    
+    st.write("""  
     Harness the power of **K-Means clustering** to gain valuable insights into your online retail dataset. 
     Our platform allows you to effortlessly segment customers, helping you understand their behavior and tailor your marketing strategies.  
     

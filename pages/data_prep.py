@@ -92,6 +92,8 @@ elif data_option == "Upload new data":
 else:
     df = None
 
+st.session_state['preprocessed'] = False
+
 # Example function for preprocessing (replace with your actual logic)
 def preprocess_data():
     # Set a flag in session state to indicate preprocessing is done

@@ -25,7 +25,7 @@ from pages.chart import (revenue_by_purchase_type,
                    repeat_purchase_rate,
                    top_products_by_sales1
                    )
-if st.button("icon=":material/arrow_back:"):
+if st.button("icon=":material/arrow_back:""):
     st.switch_page("ui.py")
     
 st.markdown("<br>", unsafe_allow_html=True)

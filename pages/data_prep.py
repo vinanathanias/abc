@@ -92,7 +92,9 @@ elif data_option == "Upload new data":
 else:
     df = None
 
-st.session_state['preprocessed'] = False
+# Initialize session state for preprocessing if not already set
+if 'preprocessed' not in st.session_state:
+    st.session_state['preprocessed'] = False
 
 # Example function for preprocessing (replace with your actual logic)
 def preprocess_data():
@@ -203,6 +205,6 @@ if df is not None:
     st.dataframe(df, use_container_width=True)
 
     # Display Preprocess button
-    if st.button("Preprocess the data", on_click=preprocess_data) or st.session_state.get('preprocessed'):
+    if st.button("Preprocess the data") or st.session_state.get('preprocessed'):
         # Call the preprocessing function if button clicked or state is set
         preprocess_data()

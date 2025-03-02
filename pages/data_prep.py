@@ -4,7 +4,10 @@ import pandas as pd
 from pages.chart import monthly_active_customers, sales_over_time, purchase_type_proportion, top_products_by_sales
 
 ###### Streamlit page setup #####
-st.set_page_config(page_title="Clustering Apps", page_icon="📊", layout="wide")
+st.set_page_config(page_title="Clustering Apps", 
+                   page_icon=":material/scatter_plot:", 
+                   initial_sidebar_state="collapsed",
+                   layout="wide")
 
 ###### Hide sidebar ######
 st.markdown("""
@@ -14,7 +17,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-if st.button(label="🔙 Back", key="back_btn", type="tertiary"):
+if st.button(label=":material/arrow_back: Back", key="back_btn", type="tertiary"):
     st.switch_page("ui.py")
 
 st.markdown("<br>", unsafe_allow_html=True)
@@ -34,7 +37,13 @@ def preprocess_data():
 
 # Dataset selection (only if preprocessing hasn't started)
 if not st.session_state['preprocessed']:
-    st.markdown("### Ready to Get Started?")
+    st.markdown("""
+    ### Ready to Get Started?  
+
+    **Choose how you'd like to begin:**  
+    1. **Use Existing Dataset:** Start exploring insights right away with our preloaded dataset, specially curated for quick analysis and demonstration.  
+    2. **Upload Your Own Dataset:** Bring your own data to the platform! Just make sure it follows the required format with the following columns: *InvoiceNo, StockCode, Description, Quantity, InvoiceDate, UnitPrice, CustomerID, and Country*  
+    """)
 
     data_option = st.selectbox("Choose Dataset", ["Select", "Use existing data", "Upload new data"], key="choose_dataset")
 
@@ -64,7 +73,7 @@ else:
 # After preprocessing, show the new UI
 if st.session_state['preprocessed']:
     st.markdown("### Data Preprocessed Successfully!")
-    
+
     selected_section = st.segmented_control(
         "Select Section",
         ["About Dataset", "Silhouette Score & Elbow Method", "K-Means Clustering"],
@@ -77,20 +86,20 @@ if st.session_state['preprocessed']:
 
         if df is not None:  # Ensure df is available
             with col1:
-                st.write("📈 Monthly Active Customers")
+                st.write("Monthly Active Customers")
                 active_customers_df = monthly_active_customers(df)
                 st.line_chart(active_customers_df.set_index("InvoiceDate"))
 
-                st.write("📊 Sales Over Time")
+                st.write("Sales Over Time")
                 sales_df = sales_over_time(df)
                 st.line_chart(sales_df.set_index("Month"))
 
             with col2:
-                st.write("📌 Proportion of Single Item vs Multi Item Purchases")
+                st.write("Proportion of Single Item vs Multi Item Purchases")
                 proportion_df = purchase_type_proportion(df)
                 st.bar_chart(proportion_df.set_index("Purchase Type"))
 
-                st.write("🏆 Top Products by Sales Volume")
+                st.write("Top Products by Sales Volume")
                 top_products_df = top_products_by_sales(df)
                 st.bar_chart(top_products_df.set_index("Description"))
         else:

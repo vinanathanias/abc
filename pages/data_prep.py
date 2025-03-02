@@ -96,11 +96,13 @@ else:
 if 'preprocessed' not in st.session_state:
     st.session_state['preprocessed'] = False
 
-# Example function for preprocessing (replace with your actual logic)
+# Function to preprocess data
 def preprocess_data():
     # Set a flag in session state to indicate preprocessing is done
     st.session_state['preprocessed'] = True
-    
+
+# Function to display visualizations
+def display_visualizations():
     # Display the segmented control only after preprocessing
     selected_section = st.segmented_control(
         "Select Section",
@@ -205,6 +207,9 @@ if df is not None:
     st.dataframe(df, use_container_width=True)
 
     # Display Preprocess button
-    if st.button("Preprocess the data") or st.session_state.get('preprocessed'):
-        # Call the preprocessing function if button clicked or state is set
+    if st.button("Preprocess the data"):
         preprocess_data()
+
+    # Display visualizations only if data is preprocessed
+    if st.session_state.get('preprocessed'):
+        display_visualizations()

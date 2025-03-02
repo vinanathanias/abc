@@ -22,7 +22,7 @@ if st.button(label=":material/arrow_back: Back", key="back_btn", type="tertiary"
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# Initialize session state
+# Initialize session state for dataset and preprocessing
 if 'preprocessed' not in st.session_state:
     st.session_state['preprocessed'] = False
 if 'df' not in st.session_state:
@@ -35,7 +35,7 @@ def preprocess_data():
     else:
         st.error("No dataset selected! Please choose or upload a dataset first.")
 
-# Dataset selection (only if preprocessing hasn't started)
+# 🟢 Show "Ready to Get Started?" only if preprocessing hasn't been done yet
 if not st.session_state['preprocessed']:
     st.markdown("""
     ### Ready to Get Started?  
@@ -63,16 +63,14 @@ if not st.session_state['preprocessed']:
 
 df = st.session_state['df']
 
-# Display dataframe if available
-if df is not None:
+# Show dataframe if available
+if df is not None and not st.session_state['preprocessed']:
     st.dataframe(df, use_container_width=True)
-    preprocess_button = st.button("Preprocess the data", on_click=preprocess_data)
-else:
-    st.warning("Please select or upload a dataset before preprocessing.")
+    st.button("Preprocess the data", on_click=preprocess_data)
 
-# After preprocessing, show the new UI
+# 🟢 Show preprocessed data UI only after preprocessing
 if st.session_state['preprocessed']:
-    st.markdown("### Data Preprocessed Successfully!")
+    st.markdown("### ✅ Data Preprocessed Successfully!")
 
     selected_section = st.segmented_control(
         "Select Section",
@@ -81,25 +79,25 @@ if st.session_state['preprocessed']:
     )
 
     if selected_section == "About Dataset":
-        st.subheader("About Dataset", anchor=False)
+        st.subheader("📊 About Dataset", anchor=False)
         col1, col2 = st.columns(2, gap="large")
 
-        if df is not None:  # Ensure df is available
+        if df is not None:
             with col1:
-                st.write("Monthly Active Customers")
+                st.write("📈 Monthly Active Customers")
                 active_customers_df = monthly_active_customers(df)
                 st.line_chart(active_customers_df.set_index("InvoiceDate"))
 
-                st.write("Sales Over Time")
+                st.write("📊 Sales Over Time")
                 sales_df = sales_over_time(df)
                 st.line_chart(sales_df.set_index("Month"))
 
             with col2:
-                st.write("Proportion of Single Item vs Multi Item Purchases")
+                st.write("🛒 Proportion of Single Item vs Multi Item Purchases")
                 proportion_df = purchase_type_proportion(df)
                 st.bar_chart(proportion_df.set_index("Purchase Type"))
 
-                st.write("Top Products by Sales Volume")
+                st.write("🏆 Top Products by Sales Volume")
                 top_products_df = top_products_by_sales(df)
                 st.bar_chart(top_products_df.set_index("Description"))
         else:

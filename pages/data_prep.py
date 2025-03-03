@@ -253,7 +253,6 @@ if df is not None:
         monetary_outliers = detect_outliers_iqr(monthly_data, 'monetary')
 
         # Visualize outliers using scatter plots
-        st.subheader("Scatter Plots for RFM Metrics")
         fig, ax = plt.subplots(1, 3, figsize=(18, 6))
 
         sns.scatterplot(x='recency', y='monetary', data=monthly_data, ax=ax[0])

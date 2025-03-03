@@ -231,5 +231,5 @@ if df is not None:
 
     # Monthly RFM Data
     monthly_data = calculate_rfm(df)
-    st.header("RFM data", anchor=False)
+    st.header("RFM data per customer ID per months", anchor=False)
     st.dataframe(monthly_data, use_container_width=True)

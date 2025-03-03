@@ -206,9 +206,8 @@ if df is not None:
     # Display the dataframe
     st.dataframe(df, use_container_width=True)
 
-    # Display Preprocess button
-    if st.button("Preprocess the data"):
-        preprocess_data()
+    # Display Preprocess button with on_click parameter
+    st.button("Preprocess the data", on_click=preprocess_data)
 
     # Display visualizations only if data is preprocessed
     if st.session_state.get('preprocessed'):

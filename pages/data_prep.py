@@ -215,7 +215,7 @@ if df is not None:
       
         ### RFM (Monthly Only) ###
         def calculate_rfm(df):
-            # df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'])
+            # Convert InvoiceDate to datetime
             df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'], format='%d/%m/%Y %H:%M', errors='coerce')
             df['month_end'] = df['InvoiceDate'] + pd.offsets.MonthEnd(0)
             df['month_year_end'] = df['month_end'].dt.strftime('%Y-%m')
@@ -233,3 +233,74 @@ if df is not None:
         monthly_data = calculate_rfm(df)
         st.header("RFM data per customer ID per months", anchor=False)
         st.dataframe(monthly_data, use_container_width=True)
+
+        ### Outlier Detection and Visualization ###
+        st.header("Outlier Detection in RFM Metrics", anchor=False)
+
+        # Function to detect outliers using IQR
+        def detect_outliers_iqr(data, column):
+            Q1 = data[column].quantile(0.25)
+            Q3 = data[column].quantile(0.75)
+            IQR = Q3 - Q1
+            lower_bound = Q1 - 1.5 * IQR
+            upper_bound = Q3 + 1.5 * IQR
+            outliers = data[(data[column] < lower_bound) | (data[column] > upper_bound)]
+            return outliers
+
+        # Detect outliers for each RFM metric
+        recency_outliers = detect_outliers_iqr(monthly_data, 'recency')
+        frequency_outliers = detect_outliers_iqr(monthly_data, 'frequency')
+        monetary_outliers = detect_outliers_iqr(monthly_data, 'monetary')
+
+        # Display outliers
+        st.subheader("Outliers in Recency")
+        st.dataframe(recency_outliers, use_container_width=True)
+
+        st.subheader("Outliers in Frequency")
+        st.dataframe(frequency_outliers, use_container_width=True)
+
+        st.subheader("Outliers in Monetary")
+        st.dataframe(monetary_outliers, use_container_width=True)
+
+        # Visualize outliers using box plots
+        st.subheader("Box Plots for RFM Metrics")
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            st.write("Recency")
+            fig, ax = plt.subplots()
+            sns.boxplot(monthly_data['recency'], ax=ax)
+            st.pyplot(fig)
+
+        with col2:
+            st.write("Frequency")
+            fig, ax = plt.subplots()
+            sns.boxplot(monthly_data['frequency'], ax=ax)
+            st.pyplot(fig)
+
+        with col3:
+            st.write("Monetary")
+            fig, ax = plt.subplots()
+            sns.boxplot(monthly_data['monetary'], ax=ax)
+            st.pyplot(fig)
+
+        # Visualize outliers using scatter plots
+        st.subheader("Scatter Plots for RFM Metrics")
+        fig, ax = plt.subplots(1, 3, figsize=(18, 6))
+
+        sns.scatterplot(x='recency', y='monetary', data=monthly_data, ax=ax[0])
+        ax[0].set_title("Recency vs Monetary")
+        ax[0].set_xlabel("Recency")
+        ax[0].set_ylabel("Monetary")
+
+        sns.scatterplot(x='frequency', y='monetary', data=monthly_data, ax=ax[1])
+        ax[1].set_title("Frequency vs Monetary")
+        ax[1].set_xlabel("Frequency")
+        ax[1].set_ylabel("Monetary")
+
+        sns.scatterplot(x='recency', y='frequency', data=monthly_data, ax=ax[2])
+        ax[2].set_title("Recency vs Frequency")
+        ax[2].set_xlabel("Recency")
+        ax[2].set_ylabel("Frequency")
+
+        st.pyplot(fig)

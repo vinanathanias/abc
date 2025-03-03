@@ -252,38 +252,6 @@ if df is not None:
         frequency_outliers = detect_outliers_iqr(monthly_data, 'frequency')
         monetary_outliers = detect_outliers_iqr(monthly_data, 'monetary')
 
-        # Display outliers
-        st.subheader("Outliers in Recency")
-        st.dataframe(recency_outliers, use_container_width=True)
-
-        st.subheader("Outliers in Frequency")
-        st.dataframe(frequency_outliers, use_container_width=True)
-
-        st.subheader("Outliers in Monetary")
-        st.dataframe(monetary_outliers, use_container_width=True)
-
-        # Visualize outliers using box plots
-        st.subheader("Box Plots for RFM Metrics")
-        col1, col2, col3 = st.columns(3)
-
-        with col1:
-            st.write("Recency")
-            fig, ax = plt.subplots()
-            sns.boxplot(monthly_data['recency'], ax=ax)
-            st.pyplot(fig)
-
-        with col2:
-            st.write("Frequency")
-            fig, ax = plt.subplots()
-            sns.boxplot(monthly_data['frequency'], ax=ax)
-            st.pyplot(fig)
-
-        with col3:
-            st.write("Monetary")
-            fig, ax = plt.subplots()
-            sns.boxplot(monthly_data['monetary'], ax=ax)
-            st.pyplot(fig)
-
         # Visualize outliers using scatter plots
         st.subheader("Scatter Plots for RFM Metrics")
         fig, ax = plt.subplots(1, 3, figsize=(18, 6))

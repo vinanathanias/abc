@@ -213,23 +213,23 @@ if df is not None:
     if st.session_state.get('preprocessed'):
         display_visualizations()
       
-    ### RFM (Monthly Only) ###
-    def calculate_rfm(df):
-        # df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'])
-        df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'], format='%d/%m/%Y %H:%M', errors='coerce')
-        df['month_end'] = df['InvoiceDate'] + pd.offsets.MonthEnd(0)
-        df['month_year_end'] = df['month_end'].dt.strftime('%Y-%m')
-        df['recency'] = (df['month_end'] - df['InvoiceDate']).dt.days
-        df['monetary'] = df['UnitPrice'] * df['Quantity']
-        df['frequency'] = df.groupby(['CustomerID', 'month_end'])['InvoiceNo'].transform('count')
-
-        return df.groupby(['CustomerID', 'month_year_end']).agg(
-            recency=('recency', 'mean'),
-            monetary=('monetary', 'mean'),
-            frequency=('frequency', 'sum')
-        ).reset_index()
-
-    # Monthly RFM Data
-    monthly_data = calculate_rfm(df)
-    st.header("RFM data per customer ID per months", anchor=False)
-    st.dataframe(monthly_data, use_container_width=True)
+        ### RFM (Monthly Only) ###
+        def calculate_rfm(df):
+            # df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'])
+            df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'], format='%d/%m/%Y %H:%M', errors='coerce')
+            df['month_end'] = df['InvoiceDate'] + pd.offsets.MonthEnd(0)
+            df['month_year_end'] = df['month_end'].dt.strftime('%Y-%m')
+            df['recency'] = (df['month_end'] - df['InvoiceDate']).dt.days
+            df['monetary'] = df['UnitPrice'] * df['Quantity']
+            df['frequency'] = df.groupby(['CustomerID', 'month_end'])['InvoiceNo'].transform('count')
+    
+            return df.groupby(['CustomerID', 'month_year_end']).agg(
+                recency=('recency', 'mean'),
+                monetary=('monetary', 'mean'),
+                frequency=('frequency', 'sum')
+            ).reset_index()
+    
+        # Monthly RFM Data
+        monthly_data = calculate_rfm(df)
+        st.header("RFM data per customer ID per months", anchor=False)
+        st.dataframe(monthly_data, use_container_width=True)

@@ -232,4 +232,4 @@ if df is not None:
     # Monthly RFM Data
     monthly_data = calculate_rfm(df)
     st.header("RFM data", anchor=False)
-    st.write(monthly_data)
+    st.dataframe(monthly_data, use_container_width=True)

@@ -244,6 +244,8 @@ if df is not None:
             IQR = Q3 - Q1
             lower_bound = Q1 - 1.5 * IQR
             upper_bound = Q3 + 1.5 * IQR
+            st.write("lower_bound", lower_bound)
+            st.write("upper_bound", upper_bound)
             outliers = data[(data[column] < lower_bound) | (data[column] > upper_bound)]
             return outliers
 
@@ -252,8 +254,7 @@ if df is not None:
         frequency_outliers = detect_outliers_iqr(monthly_data, 'frequency')
         monetary_outliers = detect_outliers_iqr(monthly_data, 'monetary')
 
-        st.write("lower_bound", lower_bound)
-        st.write("upper_bound", upper_bound)
+        
         st.write("recency_outliers", recency_outliers)
         st.write("frequency_outliers", frequency_outliers)
         st.write("monetary_outliers", monetary_outliers)

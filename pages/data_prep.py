@@ -240,8 +240,11 @@ if df is not None:
         # Function to detect outliers using IQR
         def detect_outliers_iqr(data, column):
             Q1 = data[column].quantile(0.25)
+            st.write("Q1", Q1)
             Q3 = data[column].quantile(0.75)
+            st.write("Q3", Q3)
             IQR = Q3 - Q1
+            st.write("IQR", IQR)
             lower_bound = Q1 - 1.5 * IQR
             upper_bound = Q3 + 1.5 * IQR
             st.write("lower_bound", lower_bound)

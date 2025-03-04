@@ -250,7 +250,7 @@ if df is not None:
             # st.write("lower_bound", lower_bound)
             # st.write("upper_bound", upper_bound)
             outliers = data[(data[column] < lower_bound) | (data[column] > upper_bound)]
-            st.write("outliers", outliers)
+            # st.write("outliers", outliers)
             return outliers
 
         # Detect outliers for each RFM metric

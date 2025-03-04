@@ -252,6 +252,10 @@ if df is not None:
         frequency_outliers = detect_outliers_iqr(monthly_data, 'frequency')
         monetary_outliers = detect_outliers_iqr(monthly_data, 'monetary')
 
+        st.dataframe("recency_outliers", recency_outliers)
+        st.dataframe("frequency_outliers", frequency_outliers)
+        st.dataframe("monetary_outliers", monetary_outliers)
+
         # Visualize outliers using scatter plots
         fig, ax = plt.subplots(1, 3, figsize=(18, 6))
 

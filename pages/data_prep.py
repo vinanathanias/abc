@@ -240,15 +240,15 @@ if df is not None:
         # Function to detect outliers using IQR
         def detect_outliers_iqr(data, column):
             Q1 = data[column].quantile(0.25)
-            st.write("Q1", Q1)
+            # st.write("Q1", Q1)
             Q3 = data[column].quantile(0.75)
-            st.write("Q3", Q3)
+            # st.write("Q3", Q3)
             IQR = Q3 - Q1
-            st.write("IQR", IQR)
+            # st.write("IQR", IQR)
             lower_bound = Q1 - 1.5 * IQR
             upper_bound = Q3 + 1.5 * IQR
-            st.write("lower_bound", lower_bound)
-            st.write("upper_bound", upper_bound)
+            # st.write("lower_bound", lower_bound)
+            # st.write("upper_bound", upper_bound)
             outliers = data[(data[column] < lower_bound) | (data[column] > upper_bound)]
             st.write("outliers", outliers)
             return outliers
@@ -259,9 +259,9 @@ if df is not None:
         monetary_outliers = detect_outliers_iqr(monthly_data, 'monetary')
 
         
-        st.write("recency_outliers", recency_outliers)
-        st.write("frequency_outliers", frequency_outliers)
-        st.write("monetary_outliers", monetary_outliers)
+        # st.write("recency_outliers", recency_outliers)
+        # st.write("frequency_outliers", frequency_outliers)
+        # st.write("monetary_outliers", monetary_outliers)
 
         # Visualize outliers using scatter plots
         fig, ax = plt.subplots(1, 3, figsize=(18, 6))

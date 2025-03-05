@@ -235,6 +235,28 @@ def calculate_rfm(df):
         monetary=('monetary', 'mean'),
         frequency=('frequency', 'sum')
     ).reset_index()
+
+# Function to visualize RFM data
+def visualize_rfm_data(data, title):
+    # Visualize outliers using scatter plots
+    fig, ax = plt.subplots(1, 3, figsize=(18, 6))
+
+    sns.scatterplot(x='recency', y='monetary', data=data, ax=ax[0])
+    ax[0].set_title(f"{title}: Recency vs Monetary")
+    ax[0].set_xlabel("Recency")
+    ax[0].set_ylabel("Monetary")
+
+    sns.scatterplot(x='frequency', y='monetary', data=data, ax=ax[1])
+    ax[1].set_title(f"{title}: Frequency vs Monetary")
+    ax[1].set_xlabel("Frequency")
+    ax[1].set_ylabel("Monetary")
+
+    sns.scatterplot(x='recency', y='frequency', data=data, ax=ax[2])
+    ax[2].set_title(f"{title}: Recency vs Frequency")
+    ax[2].set_xlabel("Recency")
+    ax[2].set_ylabel("Frequency")
+
+    st.pyplot(fig)
   
 # Modify the existing code to include outlier handling and normalization
 if df is not None:
@@ -269,27 +291,7 @@ if df is not None:
     if st.session_state.get('preprocessed'):
         display_visualizations()
 
-# Function to visualize RFM data
-def visualize_rfm_data(data, title):
-    # Visualize outliers using scatter plots
-    fig, ax = plt.subplots(1, 3, figsize=(18, 6))
 
-    sns.scatterplot(x='recency', y='monetary', data=data, ax=ax[0])
-    ax[0].set_title(f"{title}: Recency vs Monetary")
-    ax[0].set_xlabel("Recency")
-    ax[0].set_ylabel("Monetary")
-
-    sns.scatterplot(x='frequency', y='monetary', data=data, ax=ax[1])
-    ax[1].set_title(f"{title}: Frequency vs Monetary")
-    ax[1].set_xlabel("Frequency")
-    ax[1].set_ylabel("Monetary")
-
-    sns.scatterplot(x='recency', y='frequency', data=data, ax=ax[2])
-    ax[2].set_title(f"{title}: Recency vs Frequency")
-    ax[2].set_xlabel("Recency")
-    ax[2].set_ylabel("Frequency")
-
-    st.pyplot(fig)
 
 
 

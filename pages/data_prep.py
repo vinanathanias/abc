@@ -283,6 +283,8 @@ if df is not None:
 
         # Normalize the RFM metrics
         monthly_data = normalize_data(monthly_data, ['recency', 'frequency', 'monetary'])
+        st.header("Data AFTER normalized", anchor=False)
+        st.write(monthly_data)
 
         # Set a flag in session state to indicate preprocessing is done
         st.session_state['preprocessed'] = True

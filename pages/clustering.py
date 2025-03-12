@@ -10,8 +10,6 @@ import seaborn as sns
 
 # Main function to display clustering results
 def main():
-    st.title("Clustering Results")
-
     # Retrieve the normalized data from session state
     if 'normalized_data' in st.session_state:
         normalized_data = st.session_state.normalized_data

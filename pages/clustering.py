@@ -22,7 +22,7 @@ def main():
 
     # Let the user choose the number of clusters
     st.subheader("Choose the Number of Clusters (k)")
-    n_clusters = st.slider("Select k", min_value=2, max_value=10, value=4, step=1)
+    n_clusters = st.slider(min_value=2, max_value=10, value=4, step=1)
 
     # Perform K-Means clustering with the selected k
     clustered_data = perform_kmeans_clustering(normalized_data, n_clusters)

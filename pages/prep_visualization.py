@@ -117,6 +117,23 @@ def calculate_silhouette_scores(data):
     })
     return silhouette_df
 
+# Function to calculate average scores per cluster
+def calculate_average_scores_per_cluster(data):
+    # Group by cluster and calculate the mean of recency, monetary, and frequency
+    avg_scores_df = data.groupby('cluster').agg({
+        'recency': 'mean',
+        'monetary': 'mean',
+        'frequency': 'mean'
+    }).reset_index()
+    
+    # Rename columns for better readability
+    avg_scores_df = avg_scores_df.rename(columns={
+        'recency': 'Average Recency',
+        'monetary': 'Average Monetary',
+        'frequency': 'Average Frequency'
+    })
+    return avg_scores_df
+
 # Main function to display preprocessing and visualization
 def main():
     st.title("Preprocessing and Visualization")
@@ -167,7 +184,7 @@ def main():
         # Calculate and display Silhouette Scores as DataFrame
         st.subheader("Silhouette Scores for Optimal k")
         silhouette_df = calculate_silhouette_scores(monthly_data)
-        st.dataframe(silhouette_df)
+        st.dataframe(silhouette_df, use_container_width=True)
 
     # Let the user choose the number of clusters
     st.subheader("Choose the Number of Clusters (k)")
@@ -180,14 +197,24 @@ def main():
     st.subheader("Clustered Data")
     st.write(clustered_data)
 
-    # Visualize the clusters
-    st.subheader("Cluster Visualization")
-    fig, ax = plt.subplots(figsize=(10, 6))
-    sns.scatterplot(x='recency', y='monetary', hue='cluster', data=clustered_data, palette='viridis', ax=ax)
-    ax.set_title("Clusters: Recency vs Monetary")
-    ax.set_xlabel("Recency")
-    ax.set_ylabel("Monetary")
-    st.pyplot(fig)
+    # Visualize the clusters and display average scores per cluster side by side
+    st.subheader("Cluster Visualization and Average Scores per Cluster")
+    col1, col2 = st.columns(2)  # Create two columns
+
+    with col1:
+        # Scatter plot of recency vs monetary
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.scatterplot(x='recency', y='monetary', hue='cluster', data=clustered_data, palette='viridis', ax=ax)
+        ax.set_title("Clusters: Recency vs Monetary")
+        ax.set_xlabel("Recency")
+        ax.set_ylabel("Monetary")
+        st.pyplot(fig)
+
+    with col2:
+        # Calculate and display average scores per cluster
+        st.subheader("Average Scores per Cluster")
+        avg_scores_df = calculate_average_scores_per_cluster(clustered_data)
+        st.dataframe(avg_scores_df, use_container_width=True)
 
 # Run the main function
 if __name__ == "__main__":

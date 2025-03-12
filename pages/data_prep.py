@@ -82,6 +82,9 @@ if df is not None:
     # Display the dataframe
     st.dataframe(df, use_container_width=True)
 
+    # Save the dataframe to session state
+    st.session_state.df = df
+
     # Add a button to navigate to the preprocessing and visualization page
     if st.button("Preprocess the data"):
         # Pass the dataframe to the next page using query parameters

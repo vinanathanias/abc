@@ -19,10 +19,6 @@ def main():
         st.error("No normalized data found. Please go back and preprocess the data.")
         return
 
-    # Display the normalized data
-    st.header("Normalized Data")
-    st.write(normalized_data)
-
     # Clustering Section
     st.header("K-Means Clustering", anchor=False)
 

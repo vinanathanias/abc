@@ -4,6 +4,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
 import matplotlib.pyplot as plt
 import seaborn as sns
 from pages.chart import (
@@ -73,11 +75,54 @@ def visualize_rfm_data(data, title):
 
     st.pyplot(fig)
 
+# Function to perform K-Means clustering
+def perform_kmeans_clustering(data, n_clusters):
+    kmeans = KMeans(n_clusters=n_clusters, random_state=42)
+    data['cluster'] = kmeans.fit_predict(data[['recency', 'frequency', 'monetary']])
+    return data
+
+# Function to plot the Elbow Method
+def plot_elbow_method(data):
+    inertia_values = []
+    k_values = range(2, 11)  # Test k from 2 to 10
+
+    for k in k_values:
+        kmeans = KMeans(n_clusters=k, random_state=42)
+        kmeans.fit(data[['recency', 'frequency', 'monetary']])
+        inertia_values.append(kmeans.inertia_)
+
+    # Plot the Elbow Method
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.plot(k_values, inertia_values, marker='o')
+    ax.set_title("Elbow Method for Optimal k")
+    ax.set_xlabel("Number of Clusters (k)")
+    ax.set_ylabel("Inertia")
+    st.pyplot(fig)
+
+# Function to calculate and display Silhouette Scores
+def plot_silhouette_scores(data):
+    silhouette_scores = []
+    k_values = range(2, 11)  # Test k from 2 to 10
+
+    for k in k_values:
+        kmeans = KMeans(n_clusters=k, random_state=42)
+        cluster_labels = kmeans.fit_predict(data[['recency', 'frequency', 'monetary']])
+        silhouette_avg = silhouette_score(data[['recency', 'frequency', 'monetary']], cluster_labels)
+        silhouette_scores.append(silhouette_avg)
+
+    # Plot Silhouette Scores
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.plot(k_values, silhouette_scores, marker='o')
+    ax.set_title("Silhouette Scores for Optimal k")
+    ax.set_xlabel("Number of Clusters (k)")
+    ax.set_ylabel("Silhouette Score")
+    st.pyplot(fig)
+
 # Main function to display preprocessing and visualization
 def main():
     st.title("Preprocessing and Visualization")
 
-    # Retrieve the dataframe from the previous page (you can use session state or query parameters)
+    # Retrieve the dataframe from session state
     if 'df' in st.session_state:
         df = st.session_state.df
     else:
@@ -107,6 +152,37 @@ def main():
     monthly_data = normalize_data(monthly_data, ['recency', 'frequency', 'monetary'])
     st.header("Data AFTER normalized", anchor=False)
     st.write(monthly_data)
+
+    # Clustering Section
+    st.header("K-Means Clustering", anchor=False)
+
+    # Plot Elbow Method
+    st.subheader("Elbow Method for Optimal k")
+    plot_elbow_method(monthly_data)
+
+    # Plot Silhouette Scores
+    st.subheader("Silhouette Scores for Optimal k")
+    plot_silhouette_scores(monthly_data)
+
+    # Let the user choose the number of clusters
+    st.subheader("Choose the Number of Clusters (k)")
+    n_clusters = st.slider("Select k", min_value=2, max_value=10, value=4, step=1)
+
+    # Perform K-Means clustering with the selected k
+    clustered_data = perform_kmeans_clustering(monthly_data, n_clusters)
+
+    # Display the clustered data
+    st.subheader("Clustered Data")
+    st.write(clustered_data)
+
+    # Visualize the clusters
+    st.subheader("Cluster Visualization")
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.scatterplot(x='recency', y='monetary', hue='cluster', data=clustered_data, palette='viridis', ax=ax)
+    ax.set_title("Clusters: Recency vs Monetary")
+    ax.set_xlabel("Recency")
+    ax.set_ylabel("Monetary")
+    st.pyplot(fig)
 
 # Run the main function
 if __name__ == "__main__":

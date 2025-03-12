@@ -97,7 +97,7 @@ def plot_elbow_method(data):
     ax.set_title("Elbow Method for Optimal k")
     ax.set_xlabel("Number of Clusters (k)")
     ax.set_ylabel("Inertia")
-    st.pyplot(fig)
+    return fig
 
 # Function to calculate Silhouette Scores and return as DataFrame
 def calculate_silhouette_scores(data):
@@ -172,19 +172,20 @@ def main():
     # Clustering Section
     st.header("K-Means Clustering", anchor=False)
 
-    # Create tabs for Elbow Method and Silhouette Scores
-    tab1, tab2 = st.tabs(["Elbow Method", "Silhouette Scores"])
+    # Use columns to display Elbow Method and Silhouette Scores side by side
+    col1, col2 = st.columns(2)
 
-    with tab1:
+    with col1:
         # Plot Elbow Method
         st.subheader("Elbow Method for Optimal k")
-        plot_elbow_method(monthly_data)
+        elbow_fig = plot_elbow_method(monthly_data)
+        st.pyplot(elbow_fig)
 
-    with tab2:
+    with col2:
         # Calculate and display Silhouette Scores as DataFrame
         st.subheader("Silhouette Scores for Optimal k")
         silhouette_df = calculate_silhouette_scores(monthly_data)
-        st.dataframe(silhouette_df, use_container_width=True)
+        st.dataframe(silhouette_df)
 
     # Let the user choose the number of clusters
     st.subheader("Choose the Number of Clusters (k)")
@@ -199,9 +200,9 @@ def main():
 
     # Visualize the clusters and display average scores per cluster side by side
     st.subheader("Cluster Visualization and Average Scores per Cluster")
-    col1, col2 = st.columns(2)  # Create two columns
+    col3, col4 = st.columns(2)  # Create two columns
 
-    with col1:
+    with col3:
         # Scatter plot of recency vs monetary
         fig, ax = plt.subplots(figsize=(10, 6))
         sns.scatterplot(x='recency', y='monetary', hue='cluster', data=clustered_data, palette='viridis', ax=ax)
@@ -210,11 +211,11 @@ def main():
         ax.set_ylabel("Monetary")
         st.pyplot(fig)
 
-    with col2:
+    with col4:
         # Calculate and display average scores per cluster
         st.subheader("Average Scores per Cluster")
         avg_scores_df = calculate_average_scores_per_cluster(clustered_data)
-        st.dataframe(avg_scores_df, use_container_width=True)
+        st.dataframe(avg_scores_df)
 
 # Run the main function
 if __name__ == "__main__":

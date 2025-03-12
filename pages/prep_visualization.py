@@ -185,7 +185,7 @@ def main():
         # Calculate and display Silhouette Scores as DataFrame
         st.subheader("Silhouette Scores for Optimal k")
         silhouette_df = calculate_silhouette_scores(monthly_data)
-        st.dataframe(silhouette_df)
+        st.dataframe(silhouette_df, use_container_width=True)
 
     # Let the user choose the number of clusters
     st.subheader("Choose the Number of Clusters (k)")
@@ -215,7 +215,7 @@ def main():
         # Calculate and display average scores per cluster
         st.subheader("Average Scores per Cluster")
         avg_scores_df = calculate_average_scores_per_cluster(clustered_data)
-        st.dataframe(avg_scores_df)
+        st.dataframe(avg_scores_df, use_container_width=True)
 
 # Run the main function
 if __name__ == "__main__":

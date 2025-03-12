@@ -99,8 +99,8 @@ def plot_elbow_method(data):
     ax.set_ylabel("Inertia")
     st.pyplot(fig)
 
-# Function to calculate and display Silhouette Scores
-def plot_silhouette_scores(data):
+# Function to calculate Silhouette Scores and return as DataFrame
+def calculate_silhouette_scores(data):
     silhouette_scores = []
     k_values = range(2, 11)  # Test k from 2 to 10
 
@@ -110,13 +110,12 @@ def plot_silhouette_scores(data):
         silhouette_avg = silhouette_score(data[['recency', 'frequency', 'monetary']], cluster_labels)
         silhouette_scores.append(silhouette_avg)
 
-    # Plot Silhouette Scores
-    fig, ax = plt.subplots(figsize=(8, 5))
-    ax.plot(k_values, silhouette_scores, marker='o')
-    ax.set_title("Silhouette Scores for Optimal k")
-    ax.set_xlabel("Number of Clusters (k)")
-    ax.set_ylabel("Silhouette Score")
-    st.pyplot(fig)
+    # Create a DataFrame for Silhouette Scores
+    silhouette_df = pd.DataFrame({
+        "Number of Clusters (k)": k_values,
+        "Silhouette Score": silhouette_scores
+    })
+    return silhouette_df
 
 # Main function to display preprocessing and visualization
 def main():
@@ -156,13 +155,19 @@ def main():
     # Clustering Section
     st.header("K-Means Clustering", anchor=False)
 
-    # Plot Elbow Method
-    st.subheader("Elbow Method for Optimal k")
-    plot_elbow_method(monthly_data)
+    # Create tabs for Elbow Method and Silhouette Scores
+    tab1, tab2 = st.tabs(["Elbow Method", "Silhouette Scores"])
 
-    # Plot Silhouette Scores
-    st.subheader("Silhouette Scores for Optimal k")
-    plot_silhouette_scores(monthly_data)
+    with tab1:
+        # Plot Elbow Method
+        st.subheader("Elbow Method for Optimal k")
+        plot_elbow_method(monthly_data)
+
+    with tab2:
+        # Calculate and display Silhouette Scores as DataFrame
+        st.subheader("Silhouette Scores for Optimal k")
+        silhouette_df = calculate_silhouette_scores(monthly_data)
+        st.dataframe(silhouette_df)
 
     # Let the user choose the number of clusters
     st.subheader("Choose the Number of Clusters (k)")

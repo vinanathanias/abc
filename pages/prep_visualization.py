@@ -39,7 +39,7 @@ st.markdown("""
             """, unsafe_allow_html=True)
 
 if st.button(label=":material/arrow_back: Back", key="back_btn", type="tertiary"):
-    st.switch_page("data_prep.py")  # Navigate back to the main page
+    st.switch_page("pages/data_prep.py")  # Navigate back to the main page
 
 
 # Function to handle outliers
@@ -173,9 +173,10 @@ def main():
 
     # Calculate RFM data
     monthly_data = calculate_rfm(df)
+    st.dataframe(monthly_data, use_container_width=True)
 
     # Visualize data BEFORE handling outliers
-    st.subheader("Data Visualization BEFORE Handling Outliers", anchor=False)
+    st.subheader("Data Before Handling Outliers", anchor=False)
     visualize_rfm_data(monthly_data, "Before Handling Outliers")
 
     # Handle outliers in the RFM metrics
@@ -184,12 +185,12 @@ def main():
     monthly_data = handle_outliers(monthly_data, 'monetary')
 
     # Visualize data AFTER handling outliers
-    st.subheader("Data Visualization AFTER Handling Outliers", anchor=False)
+    st.subheader("Data After Handling Outliers", anchor=False)
     visualize_rfm_data(monthly_data, "After Handling Outliers")
 
     # Normalize the RFM metrics
     monthly_data = normalize_data(monthly_data, ['recency', 'frequency', 'monetary'])
-    st.subheader("Data AFTER normalized", anchor=False)
+    st.subheader("Data After Normalized", anchor=False)
     st.dataframe(monthly_data, use_container_width=True)
 
     # Save the normalized data to session state for use in the next page

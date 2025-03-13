@@ -159,7 +159,7 @@ def calculate_average_scores_per_cluster(data):
 
 # Main function to display preprocessing and visualization
 def main():
-    st.title("Preprocessing and Visualization")
+    st.subheader("Preprocessing and Visualization")
 
     # Retrieve the dataframe from session state
     if 'df' in st.session_state:
@@ -175,7 +175,7 @@ def main():
     monthly_data = calculate_rfm(df)
 
     # Visualize data BEFORE handling outliers
-    st.header("Data Visualization BEFORE Handling Outliers", anchor=False)
+    st.subheader("Data Visualization BEFORE Handling Outliers", anchor=False)
     visualize_rfm_data(monthly_data, "Before Handling Outliers")
 
     # Handle outliers in the RFM metrics
@@ -184,13 +184,13 @@ def main():
     monthly_data = handle_outliers(monthly_data, 'monetary')
 
     # Visualize data AFTER handling outliers
-    st.header("Data Visualization AFTER Handling Outliers", anchor=False)
+    st.subheader("Data Visualization AFTER Handling Outliers", anchor=False)
     visualize_rfm_data(monthly_data, "After Handling Outliers")
 
     # Normalize the RFM metrics
     monthly_data = normalize_data(monthly_data, ['recency', 'frequency', 'monetary'])
-    st.header("Data AFTER normalized", anchor=False)
-    st.write(monthly_data)
+    st.subheader("Data AFTER normalized", anchor=False)
+    st.dataframe(monthly_data, use_container_width=True)
 
     # Save the normalized data to session state for use in the next page
     st.session_state.normalized_data = monthly_data

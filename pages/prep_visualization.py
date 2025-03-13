@@ -19,6 +19,13 @@ from pages.chart import (
     top_products_by_sales1
 )
 
+###### Streamlit page setup #####
+st.set_page_config(page_title="Clustering Apps", 
+                   page_icon=":material/scatter_plot:", 
+                   initial_sidebar_state="collapsed",
+                   layout="wide")
+
+
 # Function to handle outliers
 def handle_outliers(data, column):
     Q1 = data[column].quantile(0.25)

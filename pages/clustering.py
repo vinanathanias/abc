@@ -43,11 +43,11 @@ def main():
         return
 
     # Clustering Section
-    st.header("K-Means Clustering", anchor=False)
+    st.subheader("K-Means Clustering", anchor=False)
 
     # Let the user choose the number of clusters
-    st.subheader("Choose the Number of Clusters (k)")
-    n_clusters = st.slider("Select k", min_value=2, max_value=10, value=4, step=1)
+    # st.write("Choose the Number of Clusters (k)")
+    n_clusters = st.slider("Choose the Number of Clusters (k)", min_value=2, max_value=10, value=4, step=1)
 
     # Add a submit button to trigger clustering
     if st.button("Submit"):

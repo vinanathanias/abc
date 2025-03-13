@@ -8,6 +8,7 @@ from sklearn.metrics import silhouette_score
 import matplotlib.pyplot as plt
 import seaborn as sns
 import time
+import plotly.express as px  # For parallel coordinates plot
 
 ###### Streamlit page setup #####
 st.set_page_config(
@@ -132,37 +133,38 @@ def main():
             ax.set_xlabel("Frequency")
             ax.set_ylabel("Monetary")
             st.pyplot(fig)
-        
-        
-        coll1, coll2 = st.columns(2)
-        with coll1:
-            # Display average scores per cluster in a separate section
-            st.subheader("Average Scores per Cluster")
-            avg_scores_df = calculate_average_scores_per_cluster(clustered_data)
-            st.dataframe(avg_scores_df, use_container_width=True)
-            
-        with coll2:
-            # Calculate and display the transition matrix
-            st.subheader("Markov Chains Transition Matrix")
-            transition_matrix = calculate_transition_matrix(clustered_data)
-            if transition_matrix is not None:
-                # Display the transition matrix as a heatmap with 4 decimal places
-                fig, ax = plt.subplots(figsize=(8, 6))
-                sns.heatmap(
-                    transition_matrix,
-                    annot=True,  # Show annotations
-                    cmap="YlGnBu",  # Color map
-                    fmt=".4f",  # Format annotations to 4 decimal places
-                    ax=ax
-                )
-                ax.set_title("Transition Matrix (Cluster to Cluster)")
-                ax.set_xlabel("Next Cluster")
-                ax.set_ylabel("Current Cluster")
-                st.pyplot(fig)
-    
-                # Display the transition matrix as a table
-                # st.write("Transition Matrix (Probabilities):")
-                # st.dataframe(transition_matrix, use_container_width=True)
+
+        # Display average scores per cluster in a separate section
+        st.subheader("Average Scores per Cluster")
+        avg_scores_df = calculate_average_scores_per_cluster(clustered_data)
+        st.dataframe(avg_scores_df, use_container_width=True)
+
+        # Calculate and display the transition matrix
+        st.subheader("Markov Chains Transition Matrix")
+        transition_matrix = calculate_transition_matrix(clustered_data)
+        if transition_matrix is not None:
+            # Display the transition matrix as a heatmap with 4 decimal places
+            fig, ax = plt.subplots(figsize=(8, 6))
+            sns.heatmap(
+                transition_matrix,
+                annot=True,  # Show annotations
+                cmap="YlGnBu",  # Color map
+                fmt=".4f",  # Format annotations to 4 decimal places
+                ax=ax
+            )
+            ax.set_title("Transition Matrix (Cluster to Cluster)")
+            ax.set_xlabel("Next Cluster")
+            ax.set_ylabel("Current Cluster")
+            st.pyplot(fig)
+
+            # # Display the transition matrix as a table
+            # st.write("Transition Matrix (Probabilities):")
+            # st.dataframe(transition_matrix, use_container_width=True)
+
+        # Add Parallel Coordinates Plot
+        st.subheader("Parallel Coordinates Plot")
+        st.write("Visualize clusters across multiple dimensions (Recency, Frequency, Monetary).")
+        parallel_coordinates_plot(clustered_data)
 
 # Function to perform K-Means clustering
 def perform_kmeans_clustering(data, n_clusters):
@@ -186,6 +188,28 @@ def calculate_average_scores_per_cluster(data):
         'frequency': 'Average Frequency'
     })
     return avg_scores_df
+
+# Function to create a parallel coordinates plot
+def parallel_coordinates_plot(data):
+    # Ensure the data has the required columns
+    if not all(col in data.columns for col in ['recency', 'frequency', 'monetary', 'cluster']):
+        st.error("The dataset does not contain the required columns for the parallel coordinates plot.")
+        return
+
+    # Create the parallel coordinates plot
+    fig = px.parallel_coordinates(
+        data,
+        color="cluster",  # Use cluster for coloring
+        dimensions=['recency', 'frequency', 'monetary'],  # Dimensions to plot
+        labels={
+            'recency': 'Recency',
+            'frequency': 'Frequency',
+            'monetary': 'Monetary',
+            'cluster': 'Cluster'
+        },
+        color_continuous_scale=px.colors.sequential.Viridis  # Color scale
+    )
+    st.plotly_chart(fig, use_container_width=True)
 
 # Run the main function
 if __name__ == "__main__":

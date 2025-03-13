@@ -47,14 +47,13 @@ def main():
     st.subheader("K-Means Clustering", anchor=False)
 
     # Let the user choose the number of clusters
-    # st.write("Choose the Number of Clusters (k)")
     n_clusters = st.slider("Choose the Number of Clusters (k)", min_value=2, max_value=10, value=4, step=1)
 
     # Add a submit button to trigger clustering
     if st.button("Submit"):
         # Use a spinner to show loading while clustering is in progress
         with st.spinner("Clustering in progress..."):
-            time.sleep(5)
+            time.sleep(5)  # Simulate a delay for demonstration purposes
             # Perform K-Means clustering with the selected k
             clustered_data = perform_kmeans_clustering(normalized_data, n_clusters)
 
@@ -69,24 +68,43 @@ def main():
         st.subheader("Clustering Result")
         st.dataframe(clustered_data, use_container_width=True)
 
-        # Visualize the clusters and display average scores per cluster side by side
+        # Visualize the clusters and display average scores per cluster
         st.subheader("Cluster Visualization and Average Scores per Cluster")
-        col1, col2 = st.columns(2)  # Create two columns
+
+        # Create three columns for the scatter plots
+        col1, col2, col3 = st.columns(3)
 
         with col1:
             # Scatter plot of recency vs monetary
-            fig, ax = plt.subplots(figsize=(10, 6))
+            fig, ax = plt.subplots(figsize=(8, 6))
             sns.scatterplot(x='recency', y='monetary', hue='cluster', data=clustered_data, palette='viridis', ax=ax)
-            ax.set_title("Clusters: Recency vs Monetary")
+            ax.set_title("Recency vs Monetary")
             ax.set_xlabel("Recency")
             ax.set_ylabel("Monetary")
             st.pyplot(fig)
 
         with col2:
-            # Calculate and display average scores per cluster
-            st.subheader("Average Scores per Cluster")
-            avg_scores_df = calculate_average_scores_per_cluster(clustered_data)
-            st.dataframe(avg_scores_df)
+            # Scatter plot of recency vs frequency
+            fig, ax = plt.subplots(figsize=(8, 6))
+            sns.scatterplot(x='recency', y='frequency', hue='cluster', data=clustered_data, palette='viridis', ax=ax)
+            ax.set_title("Recency vs Frequency")
+            ax.set_xlabel("Recency")
+            ax.set_ylabel("Frequency")
+            st.pyplot(fig)
+
+        with col3:
+            # Scatter plot of frequency vs monetary
+            fig, ax = plt.subplots(figsize=(8, 6))
+            sns.scatterplot(x='frequency', y='monetary', hue='cluster', data=clustered_data, palette='viridis', ax=ax)
+            ax.set_title("Frequency vs Monetary")
+            ax.set_xlabel("Frequency")
+            ax.set_ylabel("Monetary")
+            st.pyplot(fig)
+
+        # Display average scores per cluster in a separate section
+        st.subheader("Average Scores per Cluster")
+        avg_scores_df = calculate_average_scores_per_cluster(clustered_data)
+        st.dataframe(avg_scores_df, use_container_width=True)
 
 # Function to perform K-Means clustering
 def perform_kmeans_clustering(data, n_clusters):

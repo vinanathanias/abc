@@ -160,6 +160,11 @@ def calculate_average_scores_per_cluster(data):
 # Main function to display preprocessing and visualization
 def main():
     st.subheader("Preprocessing and Visualization")
+    st.write(f'''Data preparation for RFM (Recency, Frequency, Monetary) analysis involves cleaning and 
+    transforming transaction data to compute RFM values per customer and per month. 
+    This process includes handling outliers, normalizing the data, aggregating transactions by customer-month, 
+    and calculating Recency (days since last purchase), Frequency (number of transactions), and Monetary (total spend). 
+    The prepared dataset enables customer segmentation and trend analysis.''')
 
     # Retrieve the dataframe from session state
     if 'df' in st.session_state:
@@ -169,14 +174,17 @@ def main():
         return
 
     # Display the dataframe
+    st.write("This is the raw data to be processed for calculating RFM values.")
     st.dataframe(df, use_container_width=True)
 
     # Calculate RFM data
     monthly_data = calculate_rfm(df)
+    st.write("Below is the processed RFM data, aggregated per customer per month.")
     st.dataframe(monthly_data, use_container_width=True)
 
     # Visualize data BEFORE handling outliers
     st.subheader("Data Before Handling Outliers", anchor=False)
+    st.write("Below is the RFM data before handling outliers. Outliers can skew the analysis, so we will apply the Interquartile Range (IQR) method to detect and remove them.")
     visualize_rfm_data(monthly_data, "Before Handling Outliers")
 
     # Handle outliers in the RFM metrics
@@ -186,6 +194,7 @@ def main():
 
     # Visualize data AFTER handling outliers
     st.subheader("Data After Handling Outliers", anchor=False)
+    st.write("Below is the RFM data after handling outliers using the IQR method. This ensures a more reliable and accurate analysis by reducing the impact of extreme values.")
     visualize_rfm_data(monthly_data, "After Handling Outliers")
 
     # Normalize the RFM metrics

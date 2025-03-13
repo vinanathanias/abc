@@ -52,7 +52,6 @@ def main():
 
     # Add a submit button to trigger clustering
     if st.button("Submit"):
-        st.write("aaa")
         # Use a spinner to show loading while clustering is in progress
         with st.spinner("Clustering in progress..."):
             time.sleep(5)
@@ -67,8 +66,8 @@ def main():
         clustered_data = st.session_state.clustered_data
 
         # Display the clustered data
-        st.subheader("Clustered Data")
-        st.write(clustered_data)
+        st.subheader("Clustering Result")
+        st.dataframe(clustered_data, use_container_width=True)
 
         # Visualize the clusters and display average scores per cluster side by side
         st.subheader("Cluster Visualization and Average Scores per Cluster")

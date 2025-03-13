@@ -51,8 +51,10 @@ def main():
 
     # Add a submit button to trigger clustering
     if st.button("Submit"):
+        st.write("aaa")
         # Use a spinner to show loading while clustering is in progress
         with st.spinner("Clustering in progress..."):
+            time.sleep(5)
             # Perform K-Means clustering with the selected k
             clustered_data = perform_kmeans_clustering(normalized_data, n_clusters)
 

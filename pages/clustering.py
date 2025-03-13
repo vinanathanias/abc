@@ -132,12 +132,16 @@ def main():
             ax.set_xlabel("Frequency")
             ax.set_ylabel("Monetary")
             st.pyplot(fig)
-
-        # Display average scores per cluster in a separate section
-        st.subheader("Average Scores per Cluster")
-        avg_scores_df = calculate_average_scores_per_cluster(clustered_data)
-        st.dataframe(avg_scores_df, use_container_width=True)
-
+        
+        
+        coll1, coll2 = st.columns(2)
+        with coll1:
+            # Display average scores per cluster in a separate section
+            st.subheader("Average Scores per Cluster")
+            avg_scores_df = calculate_average_scores_per_cluster(clustered_data)
+            st.dataframe(avg_scores_df, use_container_width=True)
+            
+        with coll2:
         # Calculate and display the transition matrix
         st.subheader("Markov Chains Transition Matrix")
         transition_matrix = calculate_transition_matrix(clustered_data)
@@ -157,8 +161,8 @@ def main():
             st.pyplot(fig)
 
             # Display the transition matrix as a table
-            st.write("Transition Matrix (Probabilities):")
-            st.dataframe(transition_matrix, use_container_width=True)
+            # st.write("Transition Matrix (Probabilities):")
+            # st.dataframe(transition_matrix, use_container_width=True)
 
 # Function to perform K-Means clustering
 def perform_kmeans_clustering(data, n_clusters):

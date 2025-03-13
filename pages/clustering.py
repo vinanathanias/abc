@@ -7,6 +7,12 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 import matplotlib.pyplot as plt
 import seaborn as sns
+###### Streamlit page setup #####
+st.set_page_config(page_title="Clustering Apps", 
+                   page_icon=":material/scatter_plot:", 
+                   initial_sidebar_state="collapsed",
+                   layout="wide")
+
 
 # Main function to display clustering results
 def main():

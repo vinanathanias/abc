@@ -142,9 +142,15 @@ def main():
         st.subheader("Markov Chains Transition Matrix")
         transition_matrix = calculate_transition_matrix(clustered_data)
         if transition_matrix is not None:
-            # Display the transition matrix as a heatmap
+            # Display the transition matrix as a heatmap with 4 decimal places
             fig, ax = plt.subplots(figsize=(8, 6))
-            sns.heatmap(transition_matrix, annot=True, cmap="YlGnBu", fmt=".2f", ax=ax)
+            sns.heatmap(
+                transition_matrix,
+                annot=True,  # Show annotations
+                cmap="YlGnBu",  # Color map
+                fmt=".4f",  # Format annotations to 4 decimal places
+                ax=ax
+            )
             ax.set_title("Transition Matrix (Cluster to Cluster)")
             ax.set_xlabel("Next Cluster")
             ax.set_ylabel("Current Cluster")

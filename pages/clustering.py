@@ -7,11 +7,14 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 import matplotlib.pyplot as plt
 import seaborn as sns
+
 ###### Streamlit page setup #####
-st.set_page_config(page_title="Clustering Apps", 
-                   page_icon=":material/scatter_plot:", 
-                   initial_sidebar_state="collapsed",
-                   layout="wide")
+st.set_page_config(
+    page_title="Clustering Apps", 
+    page_icon=":material/scatter_plot:", 
+    initial_sidebar_state="collapsed",
+    layout="wide"
+)
 
 ###### Hide sidebar ######
 st.markdown("""
@@ -26,9 +29,9 @@ st.markdown("""
             </style>
             """, unsafe_allow_html=True)
 
+# Back button to return to the preprocessing page
 if st.button(label=":material/arrow_back: Back", key="back_btn", type="tertiary"):
-    st.switch_page("pages/prep_visualization.py")  # Navigate back to the main page
-
+    st.switch_page("pages/prep_visualization.py")  # Navigate back to the preprocessing page
 
 # Main function to display clustering results
 def main():
@@ -44,33 +47,44 @@ def main():
 
     # Let the user choose the number of clusters
     st.subheader("Choose the Number of Clusters (k)")
-    n_clusters = st.slider("", min_value=2, max_value=10, value=4, step=1)
+    n_clusters = st.slider("Select k", min_value=2, max_value=10, value=4, step=1)
 
-    # Perform K-Means clustering with the selected k
-    clustered_data = perform_kmeans_clustering(normalized_data, n_clusters)
+    # Add a submit button to trigger clustering
+    if st.button("Submit"):
+        # Use a spinner to show loading while clustering is in progress
+        with st.spinner("Clustering in progress..."):
+            # Perform K-Means clustering with the selected k
+            clustered_data = perform_kmeans_clustering(normalized_data, n_clusters)
 
-    # Display the clustered data
-    st.subheader("Clustered Data")
-    st.write(clustered_data)
+            # Save the clustered data to session state
+            st.session_state.clustered_data = clustered_data
 
-    # Visualize the clusters and display average scores per cluster side by side
-    st.subheader("Cluster Visualization and Average Scores per Cluster")
-    col1, col2 = st.columns(2)  # Create two columns
+    # Check if clustered data is available in session state
+    if 'clustered_data' in st.session_state:
+        clustered_data = st.session_state.clustered_data
 
-    with col1:
-        # Scatter plot of recency vs monetary
-        fig, ax = plt.subplots(figsize=(10, 6))
-        sns.scatterplot(x='recency', y='monetary', hue='cluster', data=clustered_data, palette='viridis', ax=ax)
-        ax.set_title("Clusters: Recency vs Monetary")
-        ax.set_xlabel("Recency")
-        ax.set_ylabel("Monetary")
-        st.pyplot(fig)
+        # Display the clustered data
+        st.subheader("Clustered Data")
+        st.write(clustered_data)
 
-    with col2:
-        # Calculate and display average scores per cluster
-        st.subheader("Average Scores per Cluster")
-        avg_scores_df = calculate_average_scores_per_cluster(clustered_data)
-        st.dataframe(avg_scores_df)
+        # Visualize the clusters and display average scores per cluster side by side
+        st.subheader("Cluster Visualization and Average Scores per Cluster")
+        col1, col2 = st.columns(2)  # Create two columns
+
+        with col1:
+            # Scatter plot of recency vs monetary
+            fig, ax = plt.subplots(figsize=(10, 6))
+            sns.scatterplot(x='recency', y='monetary', hue='cluster', data=clustered_data, palette='viridis', ax=ax)
+            ax.set_title("Clusters: Recency vs Monetary")
+            ax.set_xlabel("Recency")
+            ax.set_ylabel("Monetary")
+            st.pyplot(fig)
+
+        with col2:
+            # Calculate and display average scores per cluster
+            st.subheader("Average Scores per Cluster")
+            avg_scores_df = calculate_average_scores_per_cluster(clustered_data)
+            st.dataframe(avg_scores_df)
 
 # Function to perform K-Means clustering
 def perform_kmeans_clustering(data, n_clusters):

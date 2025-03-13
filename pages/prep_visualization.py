@@ -200,6 +200,9 @@ def main():
     # Normalize the RFM metrics
     monthly_data = normalize_data(monthly_data, ['recency', 'frequency', 'monetary'])
     st.subheader("Data After Normalized", anchor=False)
+    st.write(f'''Applying Min-Max scaling to normalize Recency, Frequency, and Monetary values. 
+    This transformation scales the data to a range of 0 to 1, ensuring comparability across different metrics.  
+    Normalizing the values helps maintain consistency and improves the effectiveness of clustering or segmentation analysis.''')
     st.dataframe(monthly_data, use_container_width=True)
 
     # Save the normalized data to session state for use in the next page

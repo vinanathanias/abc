@@ -25,6 +25,22 @@ st.set_page_config(page_title="Clustering Apps",
                    initial_sidebar_state="collapsed",
                    layout="wide")
 
+###### Hide sidebar ######
+st.markdown("""
+            <style>
+            [data-testid="stSidebar"] {
+                display: none
+            }
+
+            [data-testid="collapsedControl"] {
+                display: none
+            }
+            </style>
+            """, unsafe_allow_html=True)
+
+if st.button(label=":material/arrow_back: Back", key="back_btn", type="tertiary"):
+    st.switch_page("data_prep.py")  # Navigate back to the main page
+
 
 # Function to handle outliers
 def handle_outliers(data, column):

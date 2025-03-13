@@ -34,6 +34,38 @@ st.markdown("""
 if st.button(label=":material/arrow_back: Back", key="back_btn", type="tertiary"):
     st.switch_page("pages/prep_visualization.py")  # Navigate back to the preprocessing page
 
+# Function to calculate the transition matrix
+def calculate_transition_matrix(clustered_data):
+    # Ensure the data has a 'month_year_end' column for time-based transitions
+    if 'month_year_end' not in clustered_data.columns:
+        st.error("The dataset does not contain a 'month_year_end' column for time-based transitions.")
+        return None
+
+    # Sort the data by CustomerID and month_year_end
+    clustered_data = clustered_data.sort_values(by=['CustomerID', 'month_year_end'])
+
+    # Create a transition matrix
+    unique_clusters = sorted(clustered_data['cluster'].unique())
+    transition_matrix = pd.DataFrame(
+        np.zeros((len(unique_clusters), len(unique_clusters))),
+        index=unique_clusters,
+        columns=unique_clusters
+    )
+
+    # Calculate transitions
+    for customer_id, customer_data in clustered_data.groupby('CustomerID'):
+        customer_data = customer_data.sort_values(by='month_year_end')
+        previous_cluster = None
+        for _, row in customer_data.iterrows():
+            current_cluster = row['cluster']
+            if previous_cluster is not None:
+                transition_matrix.loc[previous_cluster, current_cluster] += 1
+            previous_cluster = current_cluster
+
+    # Normalize the transition matrix to get probabilities
+    transition_matrix = transition_matrix.div(transition_matrix.sum(axis=1), axis=0)
+    return transition_matrix
+
 # Main function to display clustering results
 def main():
     # Retrieve the normalized data from session state
@@ -105,6 +137,22 @@ def main():
         st.subheader("Average Scores per Cluster")
         avg_scores_df = calculate_average_scores_per_cluster(clustered_data)
         st.dataframe(avg_scores_df, use_container_width=True)
+
+        # Calculate and display the transition matrix
+        st.subheader("Markov Chains Transition Matrix")
+        transition_matrix = calculate_transition_matrix(clustered_data)
+        if transition_matrix is not None:
+            # Display the transition matrix as a heatmap
+            fig, ax = plt.subplots(figsize=(8, 6))
+            sns.heatmap(transition_matrix, annot=True, cmap="YlGnBu", fmt=".2f", ax=ax)
+            ax.set_title("Transition Matrix (Cluster to Cluster)")
+            ax.set_xlabel("Next Cluster")
+            ax.set_ylabel("Current Cluster")
+            st.pyplot(fig)
+
+            # Display the transition matrix as a table
+            st.write("Transition Matrix (Probabilities):")
+            st.dataframe(transition_matrix, use_container_width=True)
 
 # Function to perform K-Means clustering
 def perform_kmeans_clustering(data, n_clusters):

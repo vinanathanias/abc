@@ -51,9 +51,6 @@ data_option = st.selectbox("Choose Dataset", ["Select", "Use existing data", "Up
 df = None
 
 if data_option == "Use existing data":
-    with st.spinner("Clustering in progress..."):
-        time.sleep(5)  
-      
     with zipfile.ZipFile(existing_data_zip_path, 'r') as zfile:
         # Display list of files in the ZIP
         file_list = zfile.namelist()

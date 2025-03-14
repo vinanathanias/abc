@@ -144,7 +144,7 @@ def main():
         transition_matrix = calculate_transition_matrix(clustered_data)
 
         coll0, coll1, coll2 = st.columns([0.1, 2,2])
-        with coll1
+        with coll1:
             if transition_matrix is not None:
                 # Display the transition matrix as a heatmap with 4 decimal places
                 fig, ax = plt.subplots(figsize=(8, 6))

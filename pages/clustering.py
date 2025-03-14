@@ -128,6 +128,13 @@ def handle_clustering():
     # Save the clustered data to session state
     st.session_state.clustered_data = clustered_data
 
+# Function to handle quitting or finishing the process
+def handle_quit():
+    # Clear the session state
+    st.session_state.clear()
+    # Navigate back to the home page
+    st.switch_page("main.py")
+
 # Main function to display clustering results
 def main():
     # Retrieve the normalized data from session state
@@ -228,6 +235,10 @@ def main():
         st.subheader("Parallel Coordinates Plot")
         st.write("This plot visualizes clusters across multiple dimensions (Recency, Frequency, Monetary).")
         parallel_coordinates_plot(clustered_data)
+
+        # Add a Quit/Done button
+        if st.button("Quit/Done", type="primary"):
+            handle_quit()
 
 # Run the main function
 if __name__ == "__main__":

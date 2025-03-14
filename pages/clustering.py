@@ -33,7 +33,8 @@ st.markdown("""
 
 # Back button to return to the preprocessing page
 if st.button(label=":material/arrow_back: Back", key="back_btn", type="tertiary"):
-    st.switch_page("pages/prep_visualization.py")  # Navigate back to the preprocessing page
+    st.session_state.navigate_to = "prep_visualization.py"
+    st.rerun()
 
 # Function to calculate the transition matrix
 def calculate_transition_matrix(clustered_data):
@@ -132,11 +133,17 @@ def handle_clustering():
 def handle_quit():
     # Clear the session state
     st.session_state.clear()
-    # Navigate back to the home page
-    st.switch_page("main.py")
+    # Set a flag to navigate back to the home page
+    st.session_state.navigate_to = "main.py"
+    # Rerun the app to trigger navigation
+    st.rerun()
 
 # Main function to display clustering results
 def main():
+    # Check if navigation is required
+    if 'navigate_to' in st.session_state:
+        st.switch_page(st.session_state.navigate_to)
+
     # Retrieve the normalized data from session state
     if 'normalized_data' in st.session_state:
         normalized_data = st.session_state.normalized_data

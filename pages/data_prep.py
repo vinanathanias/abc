@@ -3,6 +3,7 @@
 import streamlit as st
 import zipfile
 import pandas as pd
+import time
 
 ###### Streamlit page setup #####
 st.set_page_config(page_title="Clustering Apps", 

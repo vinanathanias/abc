@@ -99,6 +99,7 @@ def main():
 
         # Display the clustered data
         st.subheader("Clustering Result")
+        st.write("Here is the clustered data after applying K-Means clustering:")
         st.dataframe(clustered_data, use_container_width=True)
 
         # Visualize the clusters and display average scores per cluster
@@ -108,7 +109,8 @@ def main():
         col1, col2, col3 = st.columns(3)
 
         with col1:
-            # Scatter plot of recency vs monetary
+            st.write("**Recency vs Monetary**")
+            st.write("This scatter plot shows the relationship between Recency and Monetary values for each cluster.")
             fig, ax = plt.subplots(figsize=(8, 6))
             sns.scatterplot(x='recency', y='monetary', hue='cluster', data=clustered_data, palette='viridis', ax=ax)
             ax.set_title("Recency vs Monetary")
@@ -117,7 +119,8 @@ def main():
             st.pyplot(fig)
 
         with col2:
-            # Scatter plot of recency vs frequency
+            st.write("**Recency vs Frequency**")
+            st.write("This scatter plot shows the relationship between Recency and Frequency values for each cluster.")
             fig, ax = plt.subplots(figsize=(8, 6))
             sns.scatterplot(x='recency', y='frequency', hue='cluster', data=clustered_data, palette='viridis', ax=ax)
             ax.set_title("Recency vs Frequency")
@@ -126,7 +129,8 @@ def main():
             st.pyplot(fig)
 
         with col3:
-            # Scatter plot of frequency vs monetary
+            st.write("**Frequency vs Monetary**")
+            st.write("This scatter plot shows the relationship between Frequency and Monetary values for each cluster.")
             fig, ax = plt.subplots(figsize=(8, 6))
             sns.scatterplot(x='frequency', y='monetary', hue='cluster', data=clustered_data, palette='viridis', ax=ax)
             ax.set_title("Frequency vs Monetary")
@@ -136,17 +140,20 @@ def main():
 
         # Display average scores per cluster in a separate section
         st.subheader("Average Scores per Cluster")
+        st.write("The table below shows the average Recency, Frequency, and Monetary values for each cluster.")
         avg_scores_df = calculate_average_scores_per_cluster(clustered_data)
         st.dataframe(avg_scores_df, use_container_width=True)
 
         # Calculate and display the transition matrix
         st.subheader("Markov Chains Transition Matrix")
+        st.write("The transition matrix shows the probability of moving from one cluster to another over time.")
         transition_matrix = calculate_transition_matrix(clustered_data)
 
-        coll0, coll1, coll2 = st.columns([0.1, 2,2])
+        coll0, coll1, coll2 = st.columns([0.1, 2, 2])
         with coll1:
             if transition_matrix is not None:
-                # Display the transition matrix as a heatmap with 4 decimal places
+                st.write("**Heatmap of Transition Matrix**")
+                st.write("This heatmap visualizes the transition probabilities between clusters.")
                 fig, ax = plt.subplots(figsize=(8, 6))
                 sns.heatmap(
                     transition_matrix,
@@ -160,13 +167,9 @@ def main():
                 ax.set_ylabel("Current Cluster")
                 st.pyplot(fig)
 
-            # # Display the transition matrix as a table
-            # st.write("Transition Matrix (Probabilities):")
-            # st.dataframe(transition_matrix, use_container_width=True)
-
         # Add Parallel Coordinates Plot
         st.subheader("Parallel Coordinates Plot")
-        st.write("Visualize clusters across multiple dimensions (Recency, Frequency, Monetary).")
+        st.write("This plot visualizes clusters across multiple dimensions (Recency, Frequency, Monetary).")
         parallel_coordinates_plot(clustered_data)
 
 # Function to perform K-Means clustering

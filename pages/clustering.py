@@ -33,8 +33,7 @@ st.markdown("""
 
 # Back button to return to the preprocessing page
 if st.button(label=":material/arrow_back: Back", key="back_btn", type="tertiary"):
-    st.session_state.navigate_to = "prep_visualization.py"
-    st.rerun()
+    st.switch_page("pages/prep_visualization.py")  # Navigate back to the preprocessing page
 
 # Function to calculate the transition matrix
 def calculate_transition_matrix(clustered_data):
@@ -129,21 +128,8 @@ def handle_clustering():
     # Save the clustered data to session state
     st.session_state.clustered_data = clustered_data
 
-# Function to handle quitting or finishing the process
-def handle_quit():
-    # Clear the session state
-    st.session_state.clear()
-    # Set a flag to navigate back to the home page
-    st.session_state.navigate_to = "main.py"
-    # Rerun the app to trigger navigation
-    st.rerun()
-
 # Main function to display clustering results
 def main():
-    # Check if navigation is required
-    if 'navigate_to' in st.session_state:
-        st.switch_page(st.session_state.navigate_to)
-
     # Retrieve the normalized data from session state
     if 'normalized_data' in st.session_state:
         normalized_data = st.session_state.normalized_data
@@ -242,10 +228,6 @@ def main():
         st.subheader("Parallel Coordinates Plot")
         st.write("This plot visualizes clusters across multiple dimensions (Recency, Frequency, Monetary).")
         parallel_coordinates_plot(clustered_data)
-
-        # Add a Quit/Done button
-        if st.button("Quit/Done", type="primary"):
-            handle_quit()
 
 # Run the main function
 if __name__ == "__main__":

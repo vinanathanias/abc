@@ -24,8 +24,8 @@ st.markdown("""
             </style>
             """, unsafe_allow_html=True)
 
-if st.button(label=":material/arrow_back: Back", key="back_btn", type="tertiary"):
-    st.switch_page("abc/main.py")  # Navigate back to the main page
+# if st.button(label=":material/arrow_back: Back", key="back_btn", type="tertiary"):
+#     st.switch_page("abc/main.py")  # Navigate back to the main page
     
 st.markdown("<br>", unsafe_allow_html=True)
 

@@ -152,8 +152,6 @@ def main():
         coll0, coll1, coll2 = st.columns([0.1, 2, 2])
         with coll1:
             if transition_matrix is not None:
-                st.write("**Heatmap of Transition Matrix**")
-                st.write("This heatmap visualizes the transition probabilities between clusters.")
                 fig, ax = plt.subplots(figsize=(8, 6))
                 sns.heatmap(
                     transition_matrix,

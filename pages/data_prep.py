@@ -95,7 +95,7 @@ if df is not None:
     st.session_state.df = df
 
     ##========= EDA ==========##
-    st.subheader("About Dataset", anchor=False)
+    st.subheader("About Dataset", anchor=False, divider="grey")
     col1, col2 = st.columns(2, gap="large")
     with col1:
         ###### Monthly Active Customers ######

@@ -184,7 +184,7 @@ if df is not None:
         st.altair_chart(bar_chart, use_container_width=True)
   
     # Add a button to navigate to the preprocessing and visualization page
-    if st.button("Preprocess the data"):
+    if st.button("Preprocess the data", type="primary):
         # Pass the dataframe to the next page using query parameters
         st.switch_page("pages/prep_visualization.py")
 

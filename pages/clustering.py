@@ -147,7 +147,7 @@ def main():
     st.session_state.n_clusters = n_clusters
 
     # Add a submit button to trigger clustering
-    if st.button("Submit", on_click=handle_clustering, type"primary"):
+    if st.button("Submit", on_click=handle_clustering, type="primary"):
         # Use a spinner to show loading while clustering is in progress
         with st.spinner("Clustering in progress..."):
             time.sleep(5)  # Simulate a delay for demonstration purposes

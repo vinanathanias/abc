@@ -2,6 +2,7 @@ import streamlit as st
 import zipfile
 import pandas as pd
 import time
+import altair as alt
 from pages.chart import (revenue_by_purchase_type, 
                    purchase_type_proportion, 
                    sales_over_time, 

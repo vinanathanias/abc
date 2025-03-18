@@ -1,5 +1,3 @@
-# pages/prep_visualization.py
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -159,7 +157,7 @@ def calculate_average_scores_per_cluster(data):
 
 # Main function to display preprocessing and visualization
 def main():
-    st.subheader("Preprocessing and Visualization")
+    st.subheader("Preprocessing and Visualization", anchor=False)
     st.write(f'''Data preparation for RFM (Recency, Frequency, Monetary) analysis involves cleaning and 
     transforming transaction data to compute RFM values per customer and per month. 
     This process includes handling outliers, normalizing the data, aggregating transactions by customer-month, 
@@ -209,7 +207,7 @@ def main():
     st.session_state.normalized_data = monthly_data
 
     # Add a button to navigate to the clustering page
-    if st.button("Proceed to Clustering"):
+    if st.button("Proceed to Clustering", type="primary"):
         st.switch_page("pages/clustering.py")
 
 # Run the main function

@@ -77,13 +77,13 @@ def main():
     })
 
     # Display silhouette scores in a dataframe
-    st.subheader("Silhouette Scores for Different Numbers of Clusters")
-    st.write("The table below shows the silhouette scores for different numbers of clusters. "
-             "A higher silhouette score indicates better-defined clusters.")
-    st.dataframe(silhouette_df, use_container_width=True)
+    # st.subheader("Silhouette Scores for Different Numbers of Clusters")
+    # st.write("The table below shows the silhouette scores for different numbers of clusters. "
+    #          "A higher silhouette score indicates better-defined clusters.")
+    # st.dataframe(silhouette_df, use_container_width=True)
 
     # Visualize the elbow method
-    st.subheader("Elbow Method for Optimal Number of Clusters")
+    st.subheader("Silhouette Scores and Elbow Method for Optimal Number of Clusters")
     st.write("The line chart below shows the inertia (sum of squared distances) for different numbers of clusters. "
              "The 'elbow' point indicates the optimal number of clusters.")
 

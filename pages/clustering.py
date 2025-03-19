@@ -1,132 +1,21 @@
-# pages/clustering.py
+# Function to calculate silhouette scores for different numbers of clusters
+def calculate_silhouette_scores(data, max_clusters=10):
+    silhouette_scores = []
+    for k in range(2, max_clusters + 1):
+        kmeans = KMeans(n_clusters=k, random_state=42)
+        labels = kmeans.fit_predict(data[['recency', 'frequency', 'monetary']])
+        score = silhouette_score(data[['recency', 'frequency', 'monetary']], labels)
+        silhouette_scores.append(score)
+    return silhouette_scores
 
-import streamlit as st
-import pandas as pd
-import numpy as np
-from sklearn.cluster import KMeans
-from sklearn.metrics import silhouette_score
-import matplotlib.pyplot as plt
-import seaborn as sns
-import time
-import plotly.express as px  # For parallel coordinates plot
-
-###### Streamlit page setup #####
-st.set_page_config(
-    page_title="Clustering Apps", 
-    page_icon=":material/scatter_plot:", 
-    initial_sidebar_state="collapsed",
-    layout="wide"
-)
-
-###### Hide sidebar ######
-st.markdown("""
-            <style>
-            [data-testid="stSidebar"] {
-                display: none
-            }
-
-            [data-testid="collapsedControl"] {
-                display: none
-            }
-            </style>
-            """, unsafe_allow_html=True)
-
-# Back button to return to the preprocessing page
-if st.button(label=":material/arrow_back: Back", key="back_btn", type="tertiary"):
-    st.switch_page("pages/prep_visualization.py")  # Navigate back to the preprocessing page
-
-# Function to calculate the transition matrix
-def calculate_transition_matrix(clustered_data):
-    # Ensure the data has a 'month_year_end' column for time-based transitions
-    if 'month_year_end' not in clustered_data.columns:
-        st.error("The dataset does not contain a 'month_year_end' column for time-based transitions.")
-        return None
-
-    # Sort the data by CustomerID and month_year_end
-    clustered_data = clustered_data.sort_values(by=['CustomerID', 'month_year_end'])
-
-    # Create a transition matrix
-    unique_clusters = sorted(clustered_data['cluster'].unique())
-    transition_matrix = pd.DataFrame(
-        np.zeros((len(unique_clusters), len(unique_clusters))),
-        index=unique_clusters,
-        columns=unique_clusters
-    )
-
-    # Calculate transitions
-    for customer_id, customer_data in clustered_data.groupby('CustomerID'):
-        customer_data = customer_data.sort_values(by='month_year_end')
-        previous_cluster = None
-        for _, row in customer_data.iterrows():
-            current_cluster = row['cluster']
-            if previous_cluster is not None:
-                transition_matrix.loc[previous_cluster, current_cluster] += 1
-            previous_cluster = current_cluster
-
-    # Normalize the transition matrix to get probabilities
-    transition_matrix = transition_matrix.div(transition_matrix.sum(axis=1), axis=0)
-    return transition_matrix
-
-# Function to perform K-Means clustering
-def perform_kmeans_clustering(data, n_clusters):
-    kmeans = KMeans(n_clusters=n_clusters, random_state=42)
-    data['cluster'] = kmeans.fit_predict(data[['recency', 'frequency', 'monetary']])
-    return data
-
-# Function to calculate average scores per cluster
-def calculate_average_scores_per_cluster(data):
-    # Group by cluster and calculate the mean of recency, monetary, and frequency
-    avg_scores_df = data.groupby('cluster').agg({
-        'recency': 'mean',
-        'monetary': 'mean',
-        'frequency': 'mean'
-    }).reset_index()
-    
-    # Rename columns for better readability
-    avg_scores_df = avg_scores_df.rename(columns={
-        'recency': 'Average Recency',
-        'monetary': 'Average Monetary',
-        'frequency': 'Average Frequency'
-    })
-    return avg_scores_df
-
-# Function to create a parallel coordinates plot
-def parallel_coordinates_plot(data):
-    # Ensure the data has the required columns
-    if not all(col in data.columns for col in ['recency', 'frequency', 'monetary', 'cluster']):
-        st.error("The dataset does not contain the required columns for the parallel coordinates plot.")
-        return
-
-    # Create the parallel coordinates plot
-    fig = px.parallel_coordinates(
-        data,
-        color="cluster",  # Use cluster for coloring
-        dimensions=['recency', 'frequency', 'monetary'],  # Dimensions to plot
-        labels={
-            'recency': 'Recency',
-            'frequency': 'Frequency',
-            'monetary': 'Monetary',
-            'cluster': 'Cluster'
-        },
-        color_continuous_scale=px.colors.sequential.Viridis  # Color scale
-    )
-    st.plotly_chart(fig, use_container_width=True)
-
-# Function to handle clustering when the submit button is clicked
-def handle_clustering():
-    # Retrieve the normalized data from session state
-    if 'normalized_data' in st.session_state:
-        normalized_data = st.session_state.normalized_data
-    else:
-        st.error("No normalized data found. Please go back and preprocess the data.")
-        return
-
-    # Perform K-Means clustering with the selected k
-    n_clusters = st.session_state.n_clusters
-    clustered_data = perform_kmeans_clustering(normalized_data, n_clusters)
-
-    # Save the clustered data to session state
-    st.session_state.clustered_data = clustered_data
+# Function to calculate inertia for the elbow method
+def calculate_inertia(data, max_clusters=10):
+    inertia_values = []
+    for k in range(1, max_clusters + 1):
+        kmeans = KMeans(n_clusters=k, random_state=42)
+        kmeans.fit(data[['recency', 'frequency', 'monetary']])
+        inertia_values.append(kmeans.inertia_)
+    return inertia_values
 
 # Main function to display clustering results
 def main():
@@ -140,8 +29,53 @@ def main():
     # Clustering Section
     st.subheader("K-Means Clustering", anchor=False)
 
+    # Calculate silhouette scores and inertia for different numbers of clusters
+    max_clusters = 10
+    silhouette_scores = calculate_silhouette_scores(normalized_data, max_clusters)
+    inertia_values = calculate_inertia(normalized_data, max_clusters)
+
+    # Create a dataframe for silhouette scores
+    silhouette_df = pd.DataFrame({
+        'Number of Clusters (k)': range(2, max_clusters + 1),
+        'Silhouette Score': silhouette_scores
+    })
+
+    # Display silhouette scores in a dataframe
+    st.subheader("Silhouette Scores for Different Numbers of Clusters")
+    st.write("The table below shows the silhouette scores for different numbers of clusters. "
+             "A higher silhouette score indicates better-defined clusters.")
+    st.dataframe(silhouette_df, use_container_width=True)
+
+    # Visualize the elbow method
+    st.subheader("Elbow Method for Optimal Number of Clusters")
+    st.write("The line chart below shows the inertia (sum of squared distances) for different numbers of clusters. "
+             "The 'elbow' point indicates the optimal number of clusters.")
+
+    # Create two columns for layout
+    col1, col2 = st.columns([1, 1])
+
+    with col1:
+        # Display the silhouette scores as a line chart
+        st.write("**Silhouette Scores Line Chart**")
+        fig, ax = plt.subplots(figsize=(8, 6))
+        ax.plot(range(2, max_clusters + 1), silhouette_scores, marker='o', linestyle='-', color='b')
+        ax.set_xlabel("Number of Clusters (k)")
+        ax.set_ylabel("Silhouette Score")
+        ax.set_title("Silhouette Scores for Different k")
+        st.pyplot(fig)
+
+    with col2:
+        # Display the elbow method plot
+        st.write("**Elbow Method Line Chart**")
+        fig, ax = plt.subplots(figsize=(8, 6))
+        ax.plot(range(1, max_clusters + 1), inertia_values, marker='o', linestyle='-', color='r')
+        ax.set_xlabel("Number of Clusters (k)")
+        ax.set_ylabel("Inertia")
+        ax.set_title("Elbow Method for Optimal k")
+        st.pyplot(fig)
+
     # Let the user choose the number of clusters
-    n_clusters = st.slider("Choose the Number of Clusters (k)", min_value=2, max_value=10, value=4, step=1)
+    n_clusters = st.slider("Choose the Number of Clusters (k)", min_value=2, max_value=max_clusters, value=4, step=1)
 
     # Save the selected number of clusters to session state
     st.session_state.n_clusters = n_clusters

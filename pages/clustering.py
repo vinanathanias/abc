@@ -53,6 +53,99 @@ def calculate_inertia(data, max_clusters=10):
         inertia_values.append(kmeans.inertia_)
     return inertia_values
 
+# Function to calculate the transition matrix
+def calculate_transition_matrix(clustered_data):
+    # Ensure the data has a 'month_year_end' column for time-based transitions
+    if 'month_year_end' not in clustered_data.columns:
+        st.error("The dataset does not contain a 'month_year_end' column for time-based transitions.")
+        return None
+
+    # Sort the data by CustomerID and month_year_end
+    clustered_data = clustered_data.sort_values(by=['CustomerID', 'month_year_end'])
+
+    # Create a transition matrix
+    unique_clusters = sorted(clustered_data['cluster'].unique())
+    transition_matrix = pd.DataFrame(
+        np.zeros((len(unique_clusters), len(unique_clusters))),
+        index=unique_clusters,
+        columns=unique_clusters
+    )
+
+    # Calculate transitions
+    for customer_id, customer_data in clustered_data.groupby('CustomerID'):
+        customer_data = customer_data.sort_values(by='month_year_end')
+        previous_cluster = None
+        for _, row in customer_data.iterrows():
+            current_cluster = row['cluster']
+            if previous_cluster is not None:
+                transition_matrix.loc[previous_cluster, current_cluster] += 1
+            previous_cluster = current_cluster
+
+    # Normalize the transition matrix to get probabilities
+    transition_matrix = transition_matrix.div(transition_matrix.sum(axis=1), axis=0)
+    return transition_matrix
+
+# Function to perform K-Means clustering
+def perform_kmeans_clustering(data, n_clusters):
+    kmeans = KMeans(n_clusters=n_clusters, random_state=42)
+    data['cluster'] = kmeans.fit_predict(data[['recency', 'frequency', 'monetary']])
+    return data
+
+# Function to calculate average scores per cluster
+def calculate_average_scores_per_cluster(data):
+    # Group by cluster and calculate the mean of recency, monetary, and frequency
+    avg_scores_df = data.groupby('cluster').agg({
+        'recency': 'mean',
+        'monetary': 'mean',
+        'frequency': 'mean'
+    }).reset_index()
+    
+    # Rename columns for better readability
+    avg_scores_df = avg_scores_df.rename(columns={
+        'recency': 'Average Recency',
+        'monetary': 'Average Monetary',
+        'frequency': 'Average Frequency'
+    })
+    return avg_scores_df
+
+# Function to create a parallel coordinates plot
+def parallel_coordinates_plot(data):
+    # Ensure the data has the required columns
+    if not all(col in data.columns for col in ['recency', 'frequency', 'monetary', 'cluster']):
+        st.error("The dataset does not contain the required columns for the parallel coordinates plot.")
+        return
+
+    # Create the parallel coordinates plot
+    fig = px.parallel_coordinates(
+        data,
+        color="cluster",  # Use cluster for coloring
+        dimensions=['recency', 'frequency', 'monetary'],  # Dimensions to plot
+        labels={
+            'recency': 'Recency',
+            'frequency': 'Frequency',
+            'monetary': 'Monetary',
+            'cluster': 'Cluster'
+        },
+        color_continuous_scale=px.colors.sequential.Viridis  # Color scale
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
+# Function to handle clustering when the submit button is clicked
+def handle_clustering():
+    # Retrieve the normalized data from session state
+    if 'normalized_data' in st.session_state:
+        normalized_data = st.session_state.normalized_data
+    else:
+        st.error("No normalized data found. Please go back and preprocess the data.")
+        return
+
+    # Perform K-Means clustering with the selected k
+    n_clusters = st.session_state.n_clusters
+    clustered_data = perform_kmeans_clustering(normalized_data, n_clusters)
+
+    # Save the clustered data to session state
+    st.session_state.clustered_data = clustered_data
+    
 # Main function to display clustering results
 def main():
     # Retrieve the normalized data from session state

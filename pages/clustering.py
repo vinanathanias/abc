@@ -1,3 +1,39 @@
+import streamlit as st
+import pandas as pd
+import numpy as np
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+import matplotlib.pyplot as plt
+import seaborn as sns
+import time
+import plotly.express as px  # For parallel coordinates plot
+
+###### Streamlit page setup #####
+st.set_page_config(
+    page_title="Clustering Apps", 
+    page_icon=":material/scatter_plot:", 
+    initial_sidebar_state="collapsed",
+    layout="wide"
+)
+
+###### Hide sidebar ######
+st.markdown("""
+            <style>
+            [data-testid="stSidebar"] {
+                display: none
+            }
+
+            [data-testid="collapsedControl"] {
+                display: none
+            }
+            </style>
+            """, unsafe_allow_html=True)
+
+# Back button to return to the preprocessing page
+if st.button(label=":material/arrow_back: Back", key="back_btn", type="tertiary"):
+    st.switch_page("pages/prep_visualization.py")  # Navigate back to the preprocessing page
+
+
 # Function to calculate silhouette scores for different numbers of clusters
 def calculate_silhouette_scores(data, max_clusters=10):
     silhouette_scores = []
